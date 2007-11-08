@@ -1,14 +1,14 @@
 package src.edu.gatech.cs6300;
 
 public class Student {
-    public String name;
-    public String Gtid;
-    public int Attendance;
+    private String name;
+    private String gtid;
+    private int attendance;
     
     public Student() {
         name = "";
-        Gtid = "";
-        Attendance = 0;
+        gtid = "";
+        attendance = 0;
         // TODO Auto-generated constructor stub
     }
 
@@ -17,11 +17,25 @@ public class Student {
     }
     
     public String getGtid(){        
-        return this.Gtid;
+        return this.gtid;
     }
     
     public int getAttendance(){ 
-        return this.Attendance;
+        return this.attendance;
     }
+    
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setGTID(String gtid) {
+        this.gtid = gtid;
+    }
+    
+    public void setAttendance(int attendance) {
+        this.attendance = attendance;
+    }
+    
     
 }
