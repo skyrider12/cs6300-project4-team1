@@ -1,0 +1,1 @@
+bin:lib/activation.jar:lib/gdata-core-1.0.jar:lib/gdata-libs.jar:lib/gdata-docs-1.0.jar:lib/gdata-media-1.0.jar:lib/gdata-spreadsheet-1.0.jar:lib/junit.jar:lib/mail.jar:lib/sample-util.jar:lib/utils.jar
