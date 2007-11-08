@@ -44,16 +44,68 @@ public class GradesDB {
     }
     
     public HashSet<Student> getStudents() { 
-        System.out.println("Supposed to return students!");
-        return new HashSet<Student>();
+        
+        HashSet<Student> students = new HashSet();
+        
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Details");
+        ListFeed feed = getFeed(session.service, worksheet);
+        
+        for (ListEntry entry : feed.getEntries()) {
+            Student student = new Student();
+            student.setName(entry.getCustomElements().getValue("name"));
+            student.setGTID(entry.getCustomElements().getValue("gtid"));
+            students.add(student);
+        }
+        
+        WorksheetEntry attendanceworksheet = getWorksheet(spreadsheet, "Attendance");
+        ListFeed attendancefeed = getFeed(session.service, attendanceworksheet);
+        
+        for (ListEntry entry : attendancefeed.getEntries()) {   
+            Student student = getStudentByName(entry.getCustomElements().getValue("studentname"), students);
+            System.out.println("Searching for: " + entry.getCustomElements().getValue("studentname"));
+            if (student != null) {
+                String attendance = entry.getCustomElements().getValue("total").replace("%", "");
+                
+                if (attendance.indexOf(".") != -1) {
+                    attendance = attendance.substring(0, attendance.indexOf("."));
+                }
+                
+                System.out.println("Student name:" + student.getName() + " Attendance:" + Integer.parseInt(attendance));
+                student.setAttendance(Integer.parseInt(attendance));
+            }
+          
+        }
+        
+        return students;
     }
     
+    
     public Student getStudentByName(String sName) {
-        return new Student();
+        return getStudentByName(sName, getStudents());
+    }
+    
+    public Student getStudentByName(String sName, HashSet<Student> students) {
+        
+        for (Student student : students) {
+            if (student.getName().equals(sName)) {
+                return student;
+            }
+        }
+        return null;
     }
     
     public Student getStudentByID(String sGTID) {
-        return new Student();
+        return getStudentByID(sGTID, getStudents());
+    }
+    
+    public Student getStudentByID(String sGTID, HashSet<Student> students) {
+        
+        for (Student student : students) {
+            if (student.getGtid().equals(sGTID)) {
+                return student;
+            }
+        }
+        return null;
     }
     
     public List getSpreadsheets(SpreadsheetService service) {
