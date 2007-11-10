@@ -1,6 +1,9 @@
 package src.edu.gatech.cs6300;
 
 import com.google.gdata.client.spreadsheet.*;
+import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
+import com.google.gdata.data.spreadsheet.WorksheetEntry;
+import java.util.List;
 
 public class Session {
     
@@ -59,12 +62,14 @@ public class Session {
     
     public static void main(String args[]){
     	Session s = new Session();
-		GradesDB gDB = new GradesDB(s);
-
 		System.out.println(s.login(Constants.USERNAME, Constants.PASSWORD));
-		gDB.getColumn(s.service, gDB.getWorksheet(gDB.getSpreadsheet(gDB.getSpreadsheets(s.service), Constants.GRADES_DB),"Details"),"gtid");
-		gDB.getRow(s.service, gDB.getWorksheet(gDB.getSpreadsheet(gDB.getSpreadsheets(s.service), Constants.GRADES_DB),"Details"),"Wilfrid Eastwood");
-		gDB.getNum(gDB.getFeed(s.service, gDB.getWorksheet(gDB.getSpreadsheet(gDB.getSpreadsheets(s.service), Constants.GRADES_DB),"Details")));
+		GradesDB gDB = new GradesDB(s);
+		List sheets=gDB.getSpreadsheets(s.service);
+		SpreadsheetEntry spreadsheet=gDB.getSpreadsheet(sheets,Constants.GRADES_DB);
+		WorksheetEntry worksheet= gDB.getWorksheet(spreadsheet,"Details");
+		gDB.getColumn(s.service,worksheet , "gtid");
+		gDB.getRow(s.service, worksheet ,"Wilfrid Eastwood");
+		gDB.getNum(gDB.getFeed(s.service, worksheet));
 		System.out.println("Num of Students: "+gDB.getNumStudents());
 		System.out.println("Num of Assignments: "+gDB.getNumAssignments());
     }
