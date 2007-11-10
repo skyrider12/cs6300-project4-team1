@@ -1,8 +1,13 @@
 #summary Task cards for the given story cards for Assignment 2
 
-= Story Card 1=
-1). 
+= Task Cards for Story Card 1=
+1). Add a function to the Student class - 'int getTeamNumber(int ProjectNum)'.
 
+2). Add a function to the Student class - 'int getAverageGradeByTeamMembers(int ProjectNum)'
+
+2). Add a function to the GradesDB class 'int getTeamGrade(int TeamNumber)'.
+
+3). Add 
 
 = Details =
 
