@@ -1,6 +1,6 @@
-#summary Task cards for the given story cards for Assignment 2
+#summary Task cards - Assignment 2
 
-= Task Cards =
+= Task Cards for the Story Cards given. =
 
 1). Add a function to the *Student* class - 'int getTeamNumberInProject(int ProjectNum)' which gets the Team Number the student in context belonged to in the mentioned Project Number. 
 
@@ -14,17 +14,12 @@
 
 6). Add a function to the *GradesDB* class 'float getAverageTeamGradeForAssignment(int AssignmentNum)' which gets the Average Grade of a Team for the given Assignment number. 
 
-7). Add a function to the *Student* class 'void saveInfo(string FilePath)' 
+7). Add a function to the *Student* class 'void saveInfo(string FilePath)' which saves all the data of the student in a file mentioned by the complete file path specified. 
 
-8). Develop a new class *'GradesGUI'*(or any other name you like) which provides all the functionality of the User interacting with the application. It should contain minimum member variables as a Combo box and a TextArea. 
+8). Develop a new class *'GradesGUI'*(or any other name you like) which provides all the functionality of the User interacting with the application. It should contain the minimum member variables and items as as a Combo box, a TextArea and a Save button. 
 
 9). Add a function in the *GradesGUI* class - 'void populateComboStudents()' which brings the name of all the students. 
 
-10). 
+10). Add a function in the *GradesGUI* class - 'void onComboIndexChanged()' which displays the complete data of the selected Student when a new student is selected on the Graphical interface - using the above written Modular functions and existing methods like but not limiting to 'getNumProjects()' and 'getNumAssignments'. 
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+11). Add a function in the *GradesGUI* class - 'void onSaveButtonClicked()' which asks the User for the desired file name and the Path where the file needs to be saved and then call the function Student.saveInfo(). 
