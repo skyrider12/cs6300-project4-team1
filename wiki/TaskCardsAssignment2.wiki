@@ -1,13 +1,26 @@
 #summary Task cards for the given story cards for Assignment 2
 
-= Task Cards for Story Card 1=
-1). Add a function to the Student class - 'int getTeamNumber(int ProjectNum)'.
+= Task Cards =
 
-2). Add a function to the Student class - 'int getAverageGradeByTeamMembers(int ProjectNum)'
+1). Add a function to the *Student* class - 'int getTeamNumberInProject(int ProjectNum)' which gets the Team Number the student in context belonged to in the mentioned Project Number. 
 
-2). Add a function to the GradesDB class 'int getTeamGrade(int TeamNumber)'.
+2). Add a function to the *Student* class - 'float getAverageGradeByTeamMembers(int ProjectNum)' which gets the average grade given to the student by his team Members in the specified Project Number. 
 
-3). Add 
+3). Add a function to the *Student* class - 'float getGradeForAssignment(int AssignmentNum)' which gets the student's grades for the given Assignment Number. 
+
+4). Add a function to the *GradesDB* class 'float getTeamGrade(int TeamNumber, int ProjectNum)' which gets the Grade of a Team by the specified Team and Project Number. 
+
+5). Add a function to the *GradesDB* class 'float getAverageTeamGradeForProject(int ProjectNum) which gets the Average Grade of a Team for the given Project number. 
+
+6). Add a function to the *GradesDB* class 'float getAverageTeamGradeForAssignment(int AssignmentNum)' which gets the Average Grade of a Team for the given Assignment number. 
+
+7). Add a function to the *Student* class 'void saveInfo(string FilePath)' 
+
+8). Develop a new class *'GradesGUI'*(or any other name you like) which provides all the functionality of the User interacting with the application. It should contain minimum member variables as a Combo box and a TextArea. 
+
+9). Add a function in the *GradesGUI* class - 'void populateComboStudents()' which brings the name of all the students. 
+
+10). 
 
 = Details =
 
