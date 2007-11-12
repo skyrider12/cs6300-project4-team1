@@ -8,7 +8,7 @@
 
 3). Add a function to the *Student* class - 'float getGradeForAssignment(int AssignmentNum)' which gets the student's grades for the given Assignment Number. 
 
-4). Add a function to the *GradesDB* class 'float getTeamGrade(int TeamNumber, int ProjectNum)' which gets the Grade of a Team by the specified Team and Project Number. 
+4). Add a function to the *GradesDB* class 'int getTeamGrade(int TeamNumber, int ProjectNum)' which gets the Grade of a Team by the specified Team and Project Number. 
 
 5). Add a function to the *GradesDB* class 'float getAverageTeamGradeForProject(int ProjectNum) which gets the Average Grade of Teams for the given Project number. 
 
