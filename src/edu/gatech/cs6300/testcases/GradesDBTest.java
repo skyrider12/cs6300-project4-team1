@@ -1,12 +1,12 @@
-package src.edu.gatech.cs6300.testcases;
+package edu.gatech.cs6300.testcases;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
-import src.edu.gatech.cs6300.Constants;
-import src.edu.gatech.cs6300.GradesDB;
-import src.edu.gatech.cs6300.Session;
-import src.edu.gatech.cs6300.Student;
+import edu.gatech.cs6300.Constants;
+import edu.gatech.cs6300.GradesDB;
+import edu.gatech.cs6300.Session;
+import edu.gatech.cs6300.Student;
 
 public class GradesDBTest extends TestCase {
 	private Session session = null;
@@ -104,6 +104,37 @@ public class GradesDBTest extends TestCase {
 			Student student = db.getStudentByID("901234504");
 			assertTrue(student.getName().compareTo("Shevon Wise") == 0);
 		} catch (Exception e) {
+			fail("Exception");
+		}
+	}
+	
+	public void testGetTeamGrade(){
+		int teamGrade;
+		
+		try{
+			teamGrade = db.getTeamGrade(2, 3);
+			assertEquals(96, teamGrade);
+		} catch (Exception e){
+			fail("Exception");
+		}
+	}
+	
+	public void testGetAverageTeamGradeForProject(){
+		float avgTeamGrade;
+		try{
+			avgTeamGrade = getAverageTeamGradeForProject(1); 
+			assertEquals(93, avgTeamGrade);
+		} catch(Exception e){
+			fail("Exception");
+		}
+	}
+	
+	public void testGetAverageClassGradeForAssignment(){
+		float avgClassGrade;
+		try{
+			avgClassGrade = db.getAverageClassGradeForAssignment(2);
+			assertEquals(100, avgClassGrade);
+		} catch(Exception e){
 			fail("Exception");
 		}
 	}
