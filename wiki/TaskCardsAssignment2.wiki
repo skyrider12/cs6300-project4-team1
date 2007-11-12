@@ -4,7 +4,7 @@
 
 1). Add a function to the *Student* class - 'int getTeamNumberInProject(int ProjectNum)' which gets the Team Number the student in context belonged to in the mentioned Project Number. 
 
-2). Add a function to the *Student* class - 'float getAverageGradeByTeamMembers(int ProjectNum)' which gets the average grade given to the student by his team Members in the specified Project Number. 
+2). Add a function to the *Student* class - 'float getAverageContributionByTeamMembers(int ProjectNum)' which gets the average contribution given to the student by his team Members in the specified Project Number. 
 
 3). Add a function to the *Student* class - 'float getGradeForAssignment(int AssignmentNum)' which gets the student's grades for the given Assignment Number. 
 
