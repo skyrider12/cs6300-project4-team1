@@ -122,7 +122,7 @@ public class GradesDBTest extends TestCase {
 	public void testGetAverageTeamGradeForProject(){
 		float avgTeamGrade;
 		try{
-			avgTeamGrade = getAverageTeamGradeForProject(1); 
+			avgTeamGrade = db.getAverageTeamGradeForProject(1); 
 			assertEquals(93, avgTeamGrade);
 		} catch(Exception e){
 			fail("Exception");
