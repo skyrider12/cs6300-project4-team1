@@ -14,7 +14,7 @@
 
 6). Add a function to the *GradesDB* class 'float getAverageClassGradeForAssignment(int AssignmentNum)' which gets the Average Grade of a Class for the given Assignment number. 
 
-7). Add a function to the *Student* class 'void saveInfo(string FilePath)' which saves all the data of the student in a file mentioned by the complete file path specified. 
+7). Add a function to the *GradesDB* class 'void saveStudentInfo(Student student)' which saves all the data of the student in a file mentioned by the complete file path specified. 
 
 8). Develop a new class *'GradesGUI'*(or any other name you like) which provides all the functionality of the User interacting with the application. It should contain the minimum member variables and items as as a Combo box, a TextArea displaying the student's information, and a Save button. 
 
