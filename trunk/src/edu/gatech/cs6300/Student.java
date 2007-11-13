@@ -1,4 +1,4 @@
-package src.edu.gatech.cs6300;
+package edu.gatech.cs6300;
 
 public class Student {
     private String name;
@@ -24,6 +24,13 @@ public class Student {
         return this.attendance;
     }
     
+    /**
+     * @return the email address for the student
+     */
+    public String getEmail() {
+    	return "";
+    }
+    
     
     public void setName(String name) {
         this.name = name;
@@ -35,6 +42,10 @@ public class Student {
     
     public void setAttendance(int attendance) {
         this.attendance = attendance;
+    }
+    
+    public int getProjectTeam(int iProjectNumber) {
+    	return -1;
     }
     
     
