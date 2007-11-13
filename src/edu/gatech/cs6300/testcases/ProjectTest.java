@@ -1,10 +1,10 @@
-package src.edu.gatech.cs6300.testcases;
+package edu.gatech.cs6300.testcases;
 
-import src.edu.gatech.cs6300.Constants;
-import src.edu.gatech.cs6300.GradesDB;
-import src.edu.gatech.cs6300.Project;
-import src.edu.gatech.cs6300.Session;
-import src.edu.gatech.cs6300.Student;
+import edu.gatech.cs6300.Constants;
+import edu.gatech.cs6300.GradesDB;
+import edu.gatech.cs6300.Project;
+import edu.gatech.cs6300.Session;
+import edu.gatech.cs6300.Student;
 import junit.framework.TestCase;
 
 public class ProjectTest extends TestCase{

@@ -237,12 +237,26 @@ public class GradesDB {
         return feed.getEntries().size();
     }
     
-    public Assignment getAssignment(int iAssignmentNumber) {
-    	return new Assignment();
+    /*
+     * TODO
+     */
+    public HashSet<Project> getProjects() {
+    	return null;
+    }
+
+    public Project getProjectByName(String projectName) {
+    	return null;
     }
     
-    public Project getProject(int iProjectNumber) {
-    	return new Project();
+    /**
+     * TODO
+     * @return
+     */
+    public HashSet<Assignment> getAssignments() {
+    	return null;
     }
     
+    public Assignment getAssignmentByName(String assignmentName) {
+    	return null;
+    }
 }
