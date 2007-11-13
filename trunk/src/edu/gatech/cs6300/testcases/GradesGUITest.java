@@ -105,16 +105,16 @@ public class GradesGUITest extends TestCase {
 		/* Get currently selected student */
 		Student selectedStudent = gradesGUI.getSelectedStudent();
 		
-		int iTeamNumber = selectedStudent.getProjectTeam(iProjectNumber);
+		//int iTeamNumber = selectedStudent.getProjectTeam(iProjectNumber);
 		
 		/* Test student's project info against labels */
 		try {
 			/* student’s team's grades */
-			assertEquals(gradesGUI.getProjectTeamGradeLabel(iProjectNumber), project.getTeamGrade(iTeamNumber));
+			assertEquals(gradesGUI.getProjectTeamGradeLabel(iProjectNumber), project.getGrade(project.getTeamName(selectedStudent)));
 			/* average grade across teams */
-			assertEquals(gradesGUI.getProjectAverageGradeLabel(iProjectNumber), project.getAverageTeamGrade());
+			assertEquals(gradesGUI.getProjectAverageGradeLabel(iProjectNumber), project.getAverageGrade());
 			/* average contribution received by the student from his/her team members */
-			assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), project.getAverageContributionByTeamForStudent(iTeamNumber, selectedStudent));		
+			assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), project.getContribution(selectedStudent));		
 		} catch (Exception e) {
 			fail("Exception while checking combo-box project info");
 		}
