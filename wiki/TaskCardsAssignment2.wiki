@@ -22,4 +22,4 @@
 
 11). Add a function in the *GradesGUI* class - 'void onComboIndexChanged()' which displays the complete data of the selected Student when a new student is selected on the Graphical interface - using the above written Modular functions and existing methods like but not limiting to 'getNumProjects()' and 'getNumAssignments'. 
 
-12). Add a function in the *GradesGUI* class - 'void onSaveButtonClicked()' which asks the User for the desired file name and the Path where the file needs to be saved and then call the function Student.saveInfo(). 
+12). Add a function in the *GradesGUI* class - 'void onSaveButtonClicked()' which asks the User for the desired file name and the Path where the file needs to be saved and then call the function saveStudentInfo()
