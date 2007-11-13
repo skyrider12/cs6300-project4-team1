@@ -1,4 +1,4 @@
-package src.edu.gatech.cs6300;
+package edu.gatech.cs6300;
 
 import com.google.gdata.client.spreadsheet.*;
 import com.google.gdata.data.spreadsheet.SpreadsheetEntry;

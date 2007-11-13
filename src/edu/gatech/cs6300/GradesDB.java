@@ -1,4 +1,4 @@
-package src.edu.gatech.cs6300;
+package edu.gatech.cs6300;
 
 import java.net.URL;
 import java.util.List;
@@ -45,7 +45,7 @@ public class GradesDB {
     
     public HashSet<Student> getStudents() { 
         
-        HashSet<Student> students = new HashSet();
+        HashSet<Student> students = new HashSet<Student>();
         
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Details");
         ListFeed feed = getFeed(session.service, worksheet);
@@ -111,6 +111,7 @@ public class GradesDB {
     public List getSpreadsheets(SpreadsheetService service) {
         URL metafeedUrl=null;
         SpreadsheetFeed feed=null;
+        List spreadsheets = null;
         
         try {
             metafeedUrl = new URL("http://spreadsheets.google.com/feeds/spreadsheets/private/full");
@@ -120,7 +121,9 @@ public class GradesDB {
             /* exception ! */
         }
         
-        List spreadsheets = feed.getEntries();
+        if (feed != null) {
+        	spreadsheets = feed.getEntries();
+        }
         
         return spreadsheets;
     }
@@ -232,6 +235,14 @@ public class GradesDB {
     
     public int getNum(ListFeed feed) {
         return feed.getEntries().size();
+    }
+    
+    public Assignment getAssignment(int iAssignmentNumber) {
+    	return new Assignment();
+    }
+    
+    public Project getProject(int iProjectNumber) {
+    	return new Project();
     }
     
 }

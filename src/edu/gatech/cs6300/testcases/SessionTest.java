@@ -1,7 +1,7 @@
-package src.edu.gatech.cs6300.testcases;
+package edu.gatech.cs6300.testcases;
 
-import src.edu.gatech.cs6300.Constants;
-import src.edu.gatech.cs6300.Session;
+import edu.gatech.cs6300.Constants;
+import edu.gatech.cs6300.Session;
 
 import junit.framework.TestCase;
 

@@ -1,4 +1,4 @@
-package src.edu.gatech.cs6300;
+package edu.gatech.cs6300;
 
 public interface Constants {
 	  static final String USERNAME = "team1@thep.in";

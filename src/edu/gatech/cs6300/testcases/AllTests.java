@@ -1,4 +1,4 @@
-package src.edu.gatech.cs6300.testcases;
+package edu.gatech.cs6300.testcases;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -10,6 +10,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(SessionTest.class);
 		suite.addTestSuite(GradesDBTest.class);
+		suite.addTestSuite(GradesGUITest.class);
 		//$JUnit-END$
 		return suite;
 	}
