@@ -138,11 +138,11 @@ public class GradesDBTest extends TestCase {
 		}
 	}
 	
-	public void testShowStudentName(){
+	public void testShowStudentNames(){
 		String[] wholeClass;
 		int studentNo = 0;
 		try{
-			wholeClass = db.showStudentName();
+			wholeClass = db.showStudentNames();
 			for (Student student: db.getStudents()){
 				for (int i=0; i<wholeClass.length; i++){
 					if (wholeClass[i].equals(student.getName())){
