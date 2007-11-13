@@ -109,8 +109,7 @@ public class GradesDBTest extends TestCase {
 	}
 	
 	public void testGetTeamGrade(){
-		int teamGrade;
-		
+		int teamGrade;	
 		try{
 			teamGrade = db.getTeamGrade(2, 3);
 			assertEquals(96, teamGrade);
@@ -138,4 +137,34 @@ public class GradesDBTest extends TestCase {
 			fail("Exception");
 		}
 	}
+	
+	public void testShowStudentName(){
+		String[] wholeClass;
+		int studentNo = 0;
+		try{
+			wholeClass = db.showStudentName();
+			for (Student student: db.getStudents()){
+				for (int i=0; i<wholeClass.length; i++){
+					if (wholeClass[i].equals(student.getName())){
+						studentNo ++;
+					}
+				}
+			}
+			assertEquals(14, studentNo);
+		} catch(Exception e){
+			fail("Exception");
+		}
+	}
+	
+	public void testGetStudentTeamGradeForProject(){
+		int teamGrade;
+		try {
+			teamGrade = db.getStudentTeamGradeForProject("Caileigh Raybould", 3);
+			assertEquals(100, teamGrade);
+		} catch(Exception e){
+			fail("Exception");
+		}
+	}
+	
+	
 }
