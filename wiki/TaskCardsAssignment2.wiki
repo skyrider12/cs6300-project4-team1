@@ -2,24 +2,24 @@
 
 = Task Cards for the Story Cards given. =
 
-1). Add a function to the *Student* class - 'int getTeamNumberInProject(int ProjectNum)' which gets the Team Number the student in context belonged to in the mentioned Project Number. 
+1). Develop a class (Project) that gets the information for a project, such as average grade and contribution grades.
 
-2). Add a function to the *Student* class - 'float getAverageContributionByTeamMembers(int ProjectNum)' which gets the average contribution given to the student by his team Members in the specified Project Number. 
+2).  Develop a class (Assignment) that gets the information for an assignment, such as average grade and individual grades.
 
-3). Add a function to the *Student* class - 'float getGradeForAssignment(int AssignmentNum)' which gets the student's grades for the given Assignment Number. 
+4). Add a function to the *GradesDB* class 'HashSet<Project> getProjects()' which gets the a HashSet of projects available from the online spreadsheet. 
 
-4). Add a function to the *GradesDB* class 'int getTeamGrade(int TeamNumber, int ProjectNum)' which gets the Grade of a Team by the specified Team and Project Number. 
+5). Add a function to the *GradesDB* class 'HashSet<Assignment> getAssignments()' which gets a HashSet of assignments available from the online spreadsheet. 
 
-5). Add a function to the *GradesDB* class 'float getAverageTeamGradeForProject(int ProjectNum) which gets the Average Grade of Teams for the given Project number. 
+6). Add a function to the *GradesDB* class 'Project getProjectByName(String name)' which gets a Project based on the name passed in. 
 
-6). Add a function to the *GradesDB* class 'float getAverageClassGradeForAssignment(int AssignmentNum)' which gets the Average Grade of a Class for the given Assignment number. 
+7). Add a function to the *GradesDB* class 'Assignment getAssignmentByName(String name)' which gets an Assignment based on the name passed in. 
 
-7). Add a function to the *GradesDB* class 'void saveStudentInfo(Student student)' which saves all the data of the student in a file mentioned by the complete file path specified. 
+8). Add a function to the *GradesDB* class 'void saveStudentInfo(Student student)' which saves all the data of the student in a file mentioned by the complete file path specified. 
 
-8). Develop a new class *'GradesGUI'*(or any other name you like) which provides all the functionality of the User interacting with the application. It should contain the minimum member variables and items as as a Combo box, a TextArea displaying the student's information, and a Save button. 
+9). Develop a new class *'GradesGUI'*(or any other name you like) which provides all the functionality of the User interacting with the application. It should contain the minimum member variables and items as as a Combo box, a TextArea displaying the student's information, and a Save button. 
 
-9). Add a function in the *GradesGUI* class - 'void populateComboStudents()' which brings the name of all the students. 
+10). Add a function in the *GradesGUI* class - 'void populateComboStudents()' which brings the name of all the students. 
 
-10). Add a function in the *GradesGUI* class - 'void onComboIndexChanged()' which displays the complete data of the selected Student when a new student is selected on the Graphical interface - using the above written Modular functions and existing methods like but not limiting to 'getNumProjects()' and 'getNumAssignments'. 
+11). Add a function in the *GradesGUI* class - 'void onComboIndexChanged()' which displays the complete data of the selected Student when a new student is selected on the Graphical interface - using the above written Modular functions and existing methods like but not limiting to 'getNumProjects()' and 'getNumAssignments'. 
 
-11). Add a function in the *GradesGUI* class - 'void onSaveButtonClicked()' which asks the User for the desired file name and the Path where the file needs to be saved and then call the function Student.saveInfo(). 
+12). Add a function in the *GradesGUI* class - 'void onSaveButtonClicked()' which asks the User for the desired file name and the Path where the file needs to be saved and then call the function Student.saveInfo(). 
