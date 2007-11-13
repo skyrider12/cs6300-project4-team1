@@ -1,8 +1,10 @@
 package edu.gatech.cs6300.testcases;
 
+import edu.gatech.cs6300.Assignment;
 import edu.gatech.cs6300.Constants;
 import edu.gatech.cs6300.GradesDB;
 import edu.gatech.cs6300.GradesGUI;
+import edu.gatech.cs6300.Project;
 import edu.gatech.cs6300.Session;
 import edu.gatech.cs6300.Student;
 
@@ -98,7 +100,7 @@ public class GradesGUITest extends TestCase {
 		/* Select a student */
 		gradesGUI.setSelectedStudent(5);
 				
-		Project project = db.getProject(iProjectNumber);
+		Project project = db.getProjectByName("P" + iProjectNumber);
 				
 		/* Get currently selected student */
 		Student selectedStudent = gradesGUI.getSelectedStudent();
@@ -127,7 +129,7 @@ public class GradesGUITest extends TestCase {
 		/* Select a student */
 		gradesGUI.setSelectedStudent(6);
 		
-		Assignment assignment2 = db.getAssignment(2);
+		Assignment assignment2 = db.getAssignmentByName("Assignment 2");
 				
 		/* Get currently selected student */
 		Student selectedStudent = gradesGUI.getSelectedStudent();
