@@ -68,7 +68,7 @@ public class Session {
 		SpreadsheetEntry spreadsheet=gDB.getSpreadsheet(sheets,Constants.GRADES_DB);
 		WorksheetEntry worksheet= gDB.getWorksheet(spreadsheet,"Details");
 		gDB.getColumn(s.service,worksheet , "gtid");
-		gDB.getRow(s.service, worksheet ,"Wilfrid Eastwood");
+		
 		gDB.getNum(gDB.getFeed(s.service, worksheet));
 		System.out.println("Num of Students: "+gDB.getNumStudents());
 		System.out.println("Num of Assignments: "+gDB.getNumAssignments());

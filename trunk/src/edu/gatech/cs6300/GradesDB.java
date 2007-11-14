@@ -1,6 +1,8 @@
 package edu.gatech.cs6300;
 
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 
@@ -9,38 +11,36 @@ import com.google.gdata.client.spreadsheet.*;
 
 public class GradesDB {
 
-	Session session;
-	
+    Session session;
+    
     SpreadsheetEntry spreadsheet;
     
-	public GradesDB(Session session) {
-		this.session = session;
+    DecimalFormat formatter = new DecimalFormat("#0.0#");
+    
+    public GradesDB(Session session) {
+        this.session = session;
         
         List sheets = getSpreadsheets(session.service);
         spreadsheet = getSpreadsheet(sheets, Constants.GRADES_DB);
-	}
-	
-    public int getNumStudents() {
-    	
-    	WorksheetEntry worksheet = getWorksheet(spreadsheet, "Details");
+    }
     
-    	ListFeed feed = getFeed(session.service, worksheet);
-    	int student_num = getNum(feed) ;
+    public int getNumStudents() {
+        
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Details");
+    
+        ListFeed feed = getFeed(session.service, worksheet);
+        int student_num = getNum(feed) ;
         return student_num;
     }
     
     public int getNumAssignments() {
-    	
-    	WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
-    
-    	ListFeed feed = getFeed(session.service, worksheet);
-    	int assignment_num = getNum(feed) ;
-        return assignment_num;
+        
+        return getAssignments().size();
     }
     
     public int getNumProjects() {
 
-        return getNumAssignments();
+        return getProjects().size();
     }
     
     public HashSet<Student> getStudents() { 
@@ -62,15 +62,12 @@ public class GradesDB {
         
         for (ListEntry entry : attendancefeed.getEntries()) {   
             Student student = getStudentByName(entry.getCustomElements().getValue("studentname"), students);
-            System.out.println("Searching for: " + entry.getCustomElements().getValue("studentname"));
             if (student != null) {
                 String attendance = entry.getCustomElements().getValue("total").replace("%", "");
                 
                 if (attendance.indexOf(".") != -1) {
                     attendance = attendance.substring(0, attendance.indexOf("."));
                 }
-                
-                System.out.println("Student name:" + student.getName() + " Attendance:" + Integer.parseInt(attendance));
                 student.setAttendance(Integer.parseInt(attendance));
             }
           
@@ -107,7 +104,138 @@ public class GradesDB {
         }
         return null;
     }
+ 
+    /**
+     *
+     */
+    public ArrayList<String> getProjects() {
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
+        ArrayList<String> projects = getColumn(session.service, worksheet, "projects");
+
+        return projects;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public ArrayList<String> getAssignments() {
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
+        ArrayList<String> assignments = getColumn(session.service, worksheet, "assignments");
+
+        return assignments;
+    }
     
+    public double getAverageAssignmentGrade(String assignmentp) {
+        //String newAssignment = assignmentp.toLowerCase().replaceAll(" ", "");  
+        String newAssignment = assignmentp;
+        
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Grades");
+        ArrayList<String> grades = getColumn(session.service, worksheet, newAssignment);
+        
+        double sum = 0;
+        for (String strGrade : grades) {
+            double grade = Double.parseDouble(strGrade);
+            sum += grade;
+        }
+        
+        if (grades.size() <= 0) {
+            return 0;
+        }
+        
+        return Double.parseDouble(formatter.format(sum/grades.size()));
+    }
+    
+    public double getStudentGrade(String assignmentp, Student student) {
+        
+        //String newAssignment = assignmentp.toLowerCase().replaceAll(" ", ""); 
+        String newAssignment = assignmentp;
+        
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Grades");
+        ListFeed feed = getFeed(session.service, worksheet);
+        
+        double grade = 0;
+        for (ListEntry entry : feed.getEntries()) {   
+            String name = entry.getCustomElements().getValue("name");
+            if (name.equals(student.getName())) {
+                grade = Double.parseDouble(entry.getCustomElements().getValue(newAssignment));
+            }
+        }
+        
+        return Double.parseDouble(formatter.format(grade));
+    }
+    
+
+    public String getTeamName(Student student, String project) {
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Teams");
+        ListFeed feed = getFeed(session.service, worksheet);
+        
+        for (ListEntry entry : feed.getEntries()) {
+            for(String tag : entry.getCustomElements().getTags()) {
+                String val = entry.getCustomElements().getValue(tag);
+                if (val.equals(student.getName())) {
+                    return entry.getCustomElements().getValue("team");
+                }
+            }
+        }
+        return "";
+    }
+    
+    public double getContribution(Student student, String project) {
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Contri");
+        ListFeed feed = getFeed(session.service, worksheet);
+
+        double val = 0;
+        for (ListEntry entry : feed.getEntries()) {
+          String studentName = entry.getCustomElements().getValue("students"); 
+          if (studentName.equals(student.getName())) {
+              return Double.parseDouble(entry.getCustomElements().getValue("average")); 
+          }
+          
+        }
+        return Double.parseDouble(formatter.format(val));
+    }
+    
+ 
+    
+    public double getTeamGrade(String teamName, String project) {
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
+        //String realTeamName = teamName.toLowerCase().replaceAll(" ", "");
+        
+        ArrayList<String> column = getColumn(session.service, worksheet, teamName);
+        
+        return Double.parseDouble(formatter.format(Double.parseDouble((String) column.toArray()[column.size() - 1])));
+    }
+    
+    public int getAverageProjectGrade(String project) {
+        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
+        ListFeed feed = getFeed(session.service, worksheet);
+        
+        List<ListEntry> entries = feed.getEntries();
+        ListEntry entry = entries.get(entries.size() - 1);
+        
+        int sum = 0;
+        int count = 0;
+        for (String tag : entry.getCustomElements().getTags()) {
+            //System.out.println("Tag in avgProject: " + tag);
+            if (!tag.equals("criteria") && !tag.equals("maxpoints")) {
+               sum += Float.parseFloat(entry.getCustomElements().getValue(tag));
+               count++;
+            }
+        }
+  
+        if (count == 0) {
+            return 0;
+        }
+        return (int)sum/count;
+    }
+    
+    /* ************************************************************
+     * 
+     * Helper functions useed to query the spreadsheet
+     * There aren't tested by any test cases
+     * 
+     *************************************************************/
     public List getSpreadsheets(SpreadsheetService service) {
         URL metafeedUrl=null;
         SpreadsheetFeed feed=null;
@@ -122,20 +250,20 @@ public class GradesDB {
         }
         
         if (feed != null) {
-        	spreadsheets = feed.getEntries();
+            spreadsheets = feed.getEntries();
         }
         
         return spreadsheets;
     }
     
     public SpreadsheetEntry getSpreadsheet(List ssheets, String dbName){
-    	for (int i = 0; i < ssheets.size(); i++) {
+        for (int i = 0; i < ssheets.size(); i++) {
             SpreadsheetEntry entry = (SpreadsheetEntry) ssheets.get(i);
-    		if (entry.getTitle().getPlainText().equals(dbName)){
-    			return entry;
-    		}
+            if (entry.getTitle().getPlainText().equals(dbName)){
+                return entry;
+            }
         }
-		return null;
+        return null;
     }
     
     public WorksheetEntry getWorksheet(SpreadsheetEntry ss, String sWorksheetName) {
@@ -162,7 +290,7 @@ public class GradesDB {
     }
     
     public ListFeed getFeed(SpreadsheetService service, WorksheetEntry worksheet){
-    	URL listFeedUrl = worksheet.getListFeedUrl();
+        URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed feed = null;
 
         try {
@@ -170,47 +298,14 @@ public class GradesDB {
             return feed;
         } catch (Exception e) {
             /* exception ! */
-        	return null;
+            return null;
         }
     }
     
-    public ListFeed getColumn(SpreadsheetService service, WorksheetEntry worksheet, String sColumnTitle) {
-    	System.out.println("getColumn");
-    	URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed feed = null;
-
-        try {
-            feed = service.getFeed(listFeedUrl, ListFeed.class);    
-        } catch (Exception e) {
-            /* exception ! */
-        }
+    public ArrayList<String> getColumn(SpreadsheetService service, WorksheetEntry worksheet, String sColumnTitle) {
         
-        if (feed != null) {
-        	System.out.println(feed.getEntries().get(0).getCustomElements().getTags());
-        	
-//        	for (int i=0; i<feed.getEntries().get(0).getCustomElements().getTags().size(); i++){
-//        		if (feed.getEntries().get(0).getCustomElements().getTags().toArray()[i].equals(sColumnTitle)){
-//        			System.out.println(feed.getEntries().get(0).getCustomElements().getValue(arg0));
-//        		}
-//        	}
-//        	
-            for (ListEntry Lentry : feed.getEntries()) {
-                
-                //System.out.println(Lentry.getTitle().getPlainText());
-                
-                for (String tag : Lentry.getCustomElements().getTags()) {
-                	if (tag.equals(sColumnTitle)){
-                		System.out.println("  " + Lentry.getCustomElements().getValue(tag) + "");
-                	}
-                }
-            }
-        }
-        
-        return feed;
-    }
-    
-    public ListFeed getRow(SpreadsheetService service, WorksheetEntry worksheet, String sRowTitle) {
-    	System.out.println("getRow");
+        String columnTitle = sColumnTitle.toLowerCase().replaceAll(" ", "");
+        ArrayList<String> columns = new ArrayList<String>();
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed feed = null;
 
@@ -220,43 +315,23 @@ public class GradesDB {
             /* exception ! */
         }
         
-        if (feed != null) {     	    	
-            for (ListEntry Lentry : feed.getEntries()) {
-                if (Lentry.getTitle().getPlainText().equals(sRowTitle)){
-                	for (String tag : Lentry.getCustomElements().getTags()) {
-                		System.out.print("  " + Lentry.getCustomElements().getValue(tag) + " ");
-                	}
-                }
+        if (feed != null) {
+                     
+            for (ListEntry entry : feed.getEntries()) {
+                columns.add(entry.getCustomElements().getValue(columnTitle));
+//                for (String tag : entry.getCustomElements().getTags()) {
+//                    if (tag.equals(columnTitle)){
+//                        columns.add(entry.getCustomElements().getValue(tag));
+//                    }
+//                }
             }
         }
         
-        return feed;
+        return columns;
     }
-    
+
     public int getNum(ListFeed feed) {
         return feed.getEntries().size();
     }
-    
-    /*
-     * TODO
-     */
-    public HashSet<Project> getProjects() {
-    	return null;
-    }
-
-    public Project getProjectByName(String projectName) {
-    	return null;
-    }
-    
-    /**
-     * TODO
-     * @return
-     */
-    public HashSet<Assignment> getAssignments() {
-    	return null;
-    }
-    
-    public Assignment getAssignmentByName(String assignmentName) {
-    	return null;
-    }
+  
 }
