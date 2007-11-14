@@ -10,8 +10,6 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(SessionTest.class);
 		suite.addTestSuite(GradesDBTest.class);
-		suite.addTestSuite(AssignmentTest.class);
-		suite.addTestSuite(ProjectTest.class);
 		suite.addTestSuite(GradesGUITest.class);
 		//$JUnit-END$
 		return suite;
