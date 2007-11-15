@@ -10,6 +10,7 @@ import edu.gatech.cs6300.Student;
 import junit.framework.TestCase;
 
 public class GradesGUITest extends TestCase {
+
     private Session session = null;
     private GradesDB db = null;
     private GradesGUI gradesGUI = null;
