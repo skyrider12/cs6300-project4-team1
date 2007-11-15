@@ -18,10 +18,10 @@ public class GradesGUI {
 	private JTextArea jTextArea;
 	private JButton jButton;
 	
-	GradesDB gDB;
+	GradesDB db;
 	
 	public GradesGUI(GradesDB gDB){
-		this.gDB = gDB;
+		this.db = gDB;
 		this.getJFrame();
 		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		this.jButton.setEnabled(false);
@@ -41,7 +41,7 @@ public class GradesGUI {
 	 */
 	public void populateComboStudents(HashSet<Student> students) {
 		for (Student student : students){
-			this.jComboBox.addItem(student.getName());
+			this.jComboBox.addItem(student);
 		}
 	}
 	
@@ -168,9 +168,33 @@ public class GradesGUI {
 					JComboBox cb = (JComboBox)e.getSource();
 			        Student student = (Student)cb.getSelectedItem();
 			        
-			        jTextArea.setText(student.getName());
-			        jTextArea.append("\n"+student.getGtid());
-			        jTextArea.append("\n"+student.getEmail());
+			        jTextArea.setText("Name: "+student.getName());
+			        jTextArea.append("\nGTID: "+student.getGtid());
+			        jTextArea.append("\nEMAIL: "+student.getEmail());
+			        jTextArea.append("\nAttendance: "+student.getAttendance()+"%");
+			        
+			        for (int i=1; i<=db.getNumProjects(); i++){
+			        	jTextArea.append("\nProject "+i+" team: "+student.getProjectTeam(i));
+				        jTextArea.append("\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i));
+				        jTextArea.append("\nProject "+i+" team grade: "+db.getTeamGrade("Team "+student.getProjectTeam(i), "P"+i));
+				        jTextArea.append("\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i));
+			        }
+			        
+			        for (int i=1; i<=db.getNumAssignments(); i++){
+			        	jTextArea.append("\nAssignment "+i+" grade: "/*+db.getStudentGrade("assignment "+i, student)*/);
+			        	jTextArea.append("\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i));
+			        }
+			        
+			        
+			        
+//			        jTextArea.append("\nProject 2 team: "+student.getProjectTeam(2));
+//			        jTextArea.append("\nProject 2 Average grade: "+db.getAverageProjectGrade("P2"));
+//			        jTextArea.append("\nProject 2 team grade: "+db.getTeamGrade("Team "+student.getProjectTeam(2), "P2"));
+//			        
+//			        jTextArea.append("\nProject 3 team: "+student.getProjectTeam(3));
+//			        jTextArea.append("\nProject 3 Average grade: "+db.getAverageProjectGrade("P3"));
+//			        jTextArea.append("\nProject 3 team grade: "+db.getTeamGrade("Team "+student.getProjectTeam(3), "P3"));
+			        
 			        
 			        jButton.setEnabled(true);
 					jTextArea.setEnabled(true);
@@ -210,6 +234,7 @@ public class GradesGUI {
 			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					System.out.println("actionPerformed()"); // TODO Auto-generated Event stub actionPerformed()
+					
 					jButton.setEnabled(false);
 				}
 			});
@@ -220,8 +245,10 @@ public class GradesGUI {
 	public static void main (String[] args){
 		System.out.println("Start");
 		Session session = new Session();
+		session.login(Constants.USERNAME, Constants.PASSWORD);
 		GradesDB gradesDB = new GradesDB(session);	
 		GradesGUI GGUI = new GradesGUI(gradesDB);
+		System.out.println("Number of Students: "+GGUI.getNumStudentsInComboBox());
 		
 		System.out.println("End");
 	}
