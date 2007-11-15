@@ -1,5 +1,6 @@
 package edu.gatech.cs6300;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.swing.JFileChooser;
@@ -24,6 +25,12 @@ public class GradesGUI {
 	private JComboBox jComboBox;
 	private JTextArea jTextArea;
 	private JButton jButton;
+	private ArrayList<studentInfo> studentList;
+	
+	private class studentInfo{
+		Student stu;
+		String	info;
+	}
 	
 	GradesDB db;
 	
@@ -33,12 +40,9 @@ public class GradesGUI {
 		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		this.jButton.setEnabled(false);
 		this.jTextArea.setEnabled(false);
+		this.studentList = new ArrayList<studentInfo>();
 		
 		this.populateComboStudents(gDB.getStudents());
-//		this.jComboBox.addItem("item1");
-//		this.jComboBox.addItem("item2");
-//		this.jComboBox.addItem("item3");
-		
 		jFrame.setVisible(true);
 	}
 	
@@ -48,7 +52,28 @@ public class GradesGUI {
 	 */
 	public void populateComboStudents(HashSet<Student> students) {
 		for (Student student : students){
+			//ComboBoxModel studentList = jComboBox.
 			this.jComboBox.addItem(student);
+			studentInfo s = new studentInfo();
+			s.stu = student;
+			String in = "Name: "+student.getName()
+					+ "\nGTID: "+student.getGtid() 
+					+"\nEMAIL: "+student.getEmail()
+					+"\nAttendance: "+student.getAttendance()+"%";
+	        
+	        for (int i=1; i<=db.getNumProjects(); i++){
+	        	in = in + "\nProject "+i+" team: "+ db.getTeamName(student, "P"+i)
+		        +"\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i)
+		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
+		        +"\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i);
+	        }
+	        
+	        for (int i=1; i<=db.getNumAssignments(); i++){
+	        	in = in + "\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student)
+	        	+"\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i);
+	        } 
+	        s.info = in;
+			this.studentList.add(s);
 		}
 	}
 	
@@ -161,6 +186,7 @@ public class GradesGUI {
 		if (jComboBox == null) {
 			jComboBox = new JComboBox();
 			jComboBox.setBounds(new Rectangle(15, 16, 272, 26));
+			
 			jComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
 				public void propertyChange(java.beans.PropertyChangeEvent e) {
 					if ((e.getPropertyName().equals("enabled"))) {
@@ -175,38 +201,36 @@ public class GradesGUI {
 					JComboBox cb = (JComboBox)e.getSource();
 			        Student student = (Student)cb.getSelectedItem();
 			        
-			        jTextArea.setText("Name: "+student.getName());
-			        jTextArea.append("\nGTID: "+student.getGtid());
-			        jTextArea.append("\nEMAIL: "+student.getEmail());
-			        jTextArea.append("\nAttendance: "+student.getAttendance()+"%");
-			        
-			        for (int i=1; i<=db.getNumProjects(); i++){
-			        	jTextArea.append("\nProject "+i+" team: "+ db.getTeamName(student, "P"+i));
-				        jTextArea.append("\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i));
-				        jTextArea.append("\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i));
-				        jTextArea.append("\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i));
+			        if (studentList!=null){
+				        for (int i=0; i<studentList.size(); i++){
+				        	if (student.equals(studentList.get(i).stu)){
+				        		jTextArea.setText(studentList.get(i).info);
+				        		jButton.setEnabled(true);
+								jTextArea.setEnabled(true);
+								
+								setSelectedStudent(cb.getSelectedIndex());
+				        	}
+				        }
 			        }
 			        
-			        for (int i=1; i<=db.getNumAssignments(); i++){
-			        	jTextArea.append("\nAssignment "+i+" grade: "/*+db.getStudentGrade("assignment "+i, student)*/);
-			        	jTextArea.append("\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i));
-			        }
-			        
-			        
-			        
-//			        jTextArea.append("\nProject 2 team: "+student.getProjectTeam(2));
-//			        jTextArea.append("\nProject 2 Average grade: "+db.getAverageProjectGrade("P2"));
-//			        jTextArea.append("\nProject 2 team grade: "+db.getTeamGrade("Team "+student.getProjectTeam(2), "P2"));
+//			        jTextArea.setText("Name: "+student.getName());
+//			        jTextArea.append("\nGTID: "+student.getGtid());
+//			        jTextArea.append("\nEMAIL: "+student.getEmail());
+//			        jTextArea.append("\nAttendance: "+student.getAttendance()+"%");
 //			        
-//			        jTextArea.append("\nProject 3 team: "+student.getProjectTeam(3));
-//			        jTextArea.append("\nProject 3 Average grade: "+db.getAverageProjectGrade("P3"));
-//			        jTextArea.append("\nProject 3 team grade: "+db.getTeamGrade("Team "+student.getProjectTeam(3), "P3"));
+//			        for (int i=1; i<=db.getNumProjects(); i++){
+//			        	jTextArea.append("\nProject "+i+" team: "+ db.getTeamName(student, "P"+i));
+//				        jTextArea.append("\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i));
+//				        jTextArea.append("\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i));
+//				        jTextArea.append("\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i));
+//			        }
+//			        
+//			        for (int i=1; i<=db.getNumAssignments(); i++){
+//			        	jTextArea.append("\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student));
+//			        	jTextArea.append("\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i));
+//			        } 
+			       
 			        
-			        
-			        jButton.setEnabled(true);
-					jTextArea.setEnabled(true);
-					
-					setSelectedStudent(cb.getSelectedIndex());
 				}
 			});
 		}
@@ -249,6 +273,7 @@ public class GradesGUI {
 							PrintWriter pr = new PrintWriter(new FileWriter(file));
 							pr.print(jTextArea.getText());
 							pr.close();
+							jButton.setEnabled(false);
 						} catch (IOException ioe) {
 							ioe.printStackTrace();
 						}
