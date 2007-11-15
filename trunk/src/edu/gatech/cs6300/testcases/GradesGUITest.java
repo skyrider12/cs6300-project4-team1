@@ -40,13 +40,11 @@ public class GradesGUITest extends TestCase {
      * all the students in the database.
      */
     public void testPopulateComboStudents() {
-        try {       
+        try { 
+        	System.out.println(db.getNumStudents());
+        	System.out.println(gradesGUI.getNumStudentsInComboBox());
             /* check to make sure there are correct number of students */
             assertEquals(db.getNumStudents(), gradesGUI.getNumStudentsInComboBox());
-            
-            /* check to make sure that the students are in correct order ?? */
-            
-            /* check to see if a student is a correct index ?? */
             
         } catch (Exception e) {
             fail("Exception while populating combo students");
