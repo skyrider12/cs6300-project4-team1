@@ -27,9 +27,6 @@ public class GradesGUITest extends TestCase {
         /* create instance of our GUI */
         gradesGUI = new GradesGUI(db);
         
-        /* fill the combo-box with students */
-        gradesGUI.populateComboStudents(db.getStudents());
-        
         super.setUp();
     }
 
