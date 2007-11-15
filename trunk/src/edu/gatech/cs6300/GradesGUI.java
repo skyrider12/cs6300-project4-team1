@@ -60,20 +60,22 @@ public class GradesGUI {
 					+ "\nGTID: "+student.getGtid() 
 					+"\nEMAIL: "+student.getEmail()
 					+"\nAttendance: "+student.getAttendance()+"%";
-	        
+			System.out.println("Student "+s.stu.getName() +" info");
 	        for (int i=1; i<=db.getNumProjects(); i++){
 	        	in = in + "\nProject "+i+" team: "+ db.getTeamName(student, "P"+i)
 		        +"\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i)
 		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
 		        +"\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i);
 	        }
-	        
+	        System.out.println("Student "+s.stu.getName() +" project info added"); 
 	        for (int i=1; i<=db.getNumAssignments(); i++){
 	        	in = in + "\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student)
 	        	+"\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i);
 	        } 
+	        System.out.println("Student "+s.stu.getName() +" assignment info added");
 	        s.info = in;
 			this.studentList.add(s);
+			System.out.println("Student "+s.stu.getName() +" added");
 		}
 	}
 	
@@ -211,26 +213,7 @@ public class GradesGUI {
 								setSelectedStudent(cb.getSelectedIndex());
 				        	}
 				        }
-			        }
-			        
-//			        jTextArea.setText("Name: "+student.getName());
-//			        jTextArea.append("\nGTID: "+student.getGtid());
-//			        jTextArea.append("\nEMAIL: "+student.getEmail());
-//			        jTextArea.append("\nAttendance: "+student.getAttendance()+"%");
-//			        
-//			        for (int i=1; i<=db.getNumProjects(); i++){
-//			        	jTextArea.append("\nProject "+i+" team: "+ db.getTeamName(student, "P"+i));
-//				        jTextArea.append("\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i));
-//				        jTextArea.append("\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i));
-//				        jTextArea.append("\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i));
-//			        }
-//			        
-//			        for (int i=1; i<=db.getNumAssignments(); i++){
-//			        	jTextArea.append("\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student));
-//			        	jTextArea.append("\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i));
-//			        } 
-			       
-			        
+			        }  
 				}
 			});
 		}
