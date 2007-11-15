@@ -171,8 +171,8 @@ public class GradesDBTest extends TestCase {
         Student student1 = db.getStudentByName("Josepha Jube");
         Student student2 = db.getStudentByName("Christine Schaeffer");
         
-        assertEquals(db.getStudentGrade("Assignment 1", student1), 100);
-        assertEquals(db.getStudentGrade("Assignment 1", student2), 90);
+        assertEquals(db.getStudentGrade("Assignment 1", student1), 100.0);
+        assertEquals(db.getStudentGrade("Assignment 1", student2), 90.0);
     }
     
     public void testGetContribution() {
@@ -180,7 +180,7 @@ public class GradesDBTest extends TestCase {
         Student student2 = db.getStudentByName("Shevon Wise");
         Student student3 = db.getStudentByName("Caileigh Raybould");
         
-        assertEquals(db.getContribution(student1, "P1"), 9.50);
+        assertEquals(db.getContribution(student1, "P1"), 9.5);
         assertEquals(db.getContribution(student2, "P1"), 9.25);
         assertEquals(db.getContribution(student3, "P1"), 7.67);
     }
@@ -206,15 +206,15 @@ public class GradesDBTest extends TestCase {
         String team2 = db.getTeamName(student1, "P1");
         String team3 = db.getTeamName(student3, "P1");
         
-        assertEquals(db.getTeamGrade(team1, "P1"), 93);
-        assertEquals(db.getTeamGrade(team2, "P1"), 96);
-        assertEquals(db.getTeamGrade(team3, "P1"), 90);
+        assertEquals(db.getTeamGrade(team1, "P1"), 93.0);
+        assertEquals(db.getTeamGrade(team2, "P1"), 96.0);
+        assertEquals(db.getTeamGrade(team3, "P1"), 90.0);
         
-        assertEquals(db.getAverageProjectGrade("P1"), 93);
+        assertEquals(db.getAverageProjectGrade("P1"), 93.0);
     }
     
     public void testGetAverageProjectGrade() {
-        assertEquals(db.getAverageProjectGrade("P3"), 99.3);        
+        assertEquals(db.getAverageProjectGrade("P3"), 99.33);        
     }
     
     public void testGetAverageContribution() {

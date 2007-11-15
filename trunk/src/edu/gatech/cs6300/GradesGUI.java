@@ -1,6 +1,8 @@
 package edu.gatech.cs6300;
 
 import java.util.HashSet;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Dimension;
@@ -8,6 +10,11 @@ import java.awt.Dimension;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.swing.JButton;
 
 public class GradesGUI {
@@ -174,9 +181,9 @@ public class GradesGUI {
 			        jTextArea.append("\nAttendance: "+student.getAttendance()+"%");
 			        
 			        for (int i=1; i<=db.getNumProjects(); i++){
-			        	jTextArea.append("\nProject "+i+" team: "+student.getProjectTeam(i));
+			        	jTextArea.append("\nProject "+i+" team: "+ db.getTeamName(student, "P"+i));
 				        jTextArea.append("\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i));
-				        jTextArea.append("\nProject "+i+" team grade: "+db.getTeamGrade("Team "+student.getProjectTeam(i), "P"+i));
+				        jTextArea.append("\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i));
 				        jTextArea.append("\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i));
 			        }
 			        
@@ -233,9 +240,19 @@ public class GradesGUI {
 
 			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					System.out.println("actionPerformed()"); // TODO Auto-generated Event stub actionPerformed()
+					final JFileChooser fc = new JFileChooser();
+					int returnVal = fc.showSaveDialog(null);
 					
-					jButton.setEnabled(false);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						try {
+							PrintWriter pr = new PrintWriter(new FileWriter(file));
+							pr.print(jTextArea.getText());
+							pr.close();
+						} catch (IOException ioe) {
+							ioe.printStackTrace();
+						}
+					}
 				}
 			});
 		}
@@ -248,7 +265,7 @@ public class GradesGUI {
 		session.login(Constants.USERNAME, Constants.PASSWORD);
 		GradesDB gradesDB = new GradesDB(session);	
 		GradesGUI GGUI = new GradesGUI(gradesDB);
-		System.out.println("Number of Students: "+GGUI.getNumStudentsInComboBox());
+		//System.out.println("Number of Students: "+GGUI.getNumStudentsInComboBox());
 		
 		System.out.println("End");
 	}

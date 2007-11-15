@@ -127,8 +127,8 @@ public class GradesDB {
     }
     
     public double getAverageAssignmentGrade(String assignmentp) {
-        //String newAssignment = assignmentp.toLowerCase().replaceAll(" ", "");  
-        String newAssignment = assignmentp;
+        String newAssignment = assignmentp.toLowerCase().replaceAll(" ", "");  
+        //String newAssignment = assignmentp;
         
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Grades");
         ArrayList<String> grades = getColumn(session.service, worksheet, newAssignment);
@@ -148,8 +148,8 @@ public class GradesDB {
     
     public double getStudentGrade(String assignmentp, Student student) {
         
-        //String newAssignment = assignmentp.toLowerCase().replaceAll(" ", ""); 
-        String newAssignment = assignmentp;
+        String newAssignment = assignmentp.toLowerCase().replaceAll(" ", ""); 
+        //String newAssignment = assignmentp;
         
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Grades");
         ListFeed feed = getFeed(session.service, worksheet);
@@ -159,6 +159,7 @@ public class GradesDB {
             String name = entry.getCustomElements().getValue("name");
             if (name.equals(student.getName())) {
                 grade = Double.parseDouble(entry.getCustomElements().getValue(newAssignment));
+                break;
             }
         }
         
@@ -170,13 +171,15 @@ public class GradesDB {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Teams");
         ListFeed feed = getFeed(session.service, worksheet);
         
-        for (ListEntry entry : feed.getEntries()) {
-            for(String tag : entry.getCustomElements().getTags()) {
-                String val = entry.getCustomElements().getValue(tag);
-                if (val.equals(student.getName())) {
-                    return entry.getCustomElements().getValue("team");
-                }
-            }
+        if (student != null) {
+	        for (ListEntry entry : feed.getEntries()) {
+	            for(String tag : entry.getCustomElements().getTags()) {
+	                String val = entry.getCustomElements().getValue(tag);
+	                if (val != null && val.equals(student.getName())) {
+	                    return entry.getCustomElements().getValue("teamname");
+	                }
+	            }
+	        }
         }
         return "";
     }
@@ -188,8 +191,9 @@ public class GradesDB {
         double val = 0;
         for (ListEntry entry : feed.getEntries()) {
           String studentName = entry.getCustomElements().getValue("students"); 
-          if (studentName.equals(student.getName())) {
-              return Double.parseDouble(entry.getCustomElements().getValue("average")); 
+          if (studentName != null && studentName.equals(student.getName())) {
+              val = Double.parseDouble(entry.getCustomElements().getValue("average")); 
+              break;
           }
           
         }
@@ -207,19 +211,19 @@ public class GradesDB {
         return Double.parseDouble(formatter.format(Double.parseDouble((String) column.toArray()[column.size() - 1])));
     }
     
-    public int getAverageProjectGrade(String project) {
+    public double getAverageProjectGrade(String project) {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
         ListFeed feed = getFeed(session.service, worksheet);
         
         List<ListEntry> entries = feed.getEntries();
         ListEntry entry = entries.get(entries.size() - 1);
         
-        int sum = 0;
+        double sum = 0;
         int count = 0;
         for (String tag : entry.getCustomElements().getTags()) {
             //System.out.println("Tag in avgProject: " + tag);
             if (!tag.equals("criteria") && !tag.equals("maxpoints")) {
-               sum += Float.parseFloat(entry.getCustomElements().getValue(tag));
+               sum += Double.parseDouble(entry.getCustomElements().getValue(tag));
                count++;
             }
         }
@@ -227,7 +231,7 @@ public class GradesDB {
         if (count == 0) {
             return 0;
         }
-        return (int)sum/count;
+        return Double.parseDouble(formatter.format(sum/count));
     }
     
     /* ************************************************************
