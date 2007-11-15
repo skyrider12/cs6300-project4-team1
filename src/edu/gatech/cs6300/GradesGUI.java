@@ -96,36 +96,36 @@ public class GradesGUI {
 	/**
 	 * @return the Student currently selected in the combobox
 	 */
-	public Student getSelectedStudent() {
-		return new Student();
+	public Student getSelectedStudent() {		
+		return (Student) jComboBox.getSelectedItem();
 	}
 	
 	/**
 	 * @return the value in the StudentName Label
 	 */
 	public String getStudentNameLabel() {
-		return "";
+		return this.getSelectedStudent().getName();
 	}
 	
 	/**
 	 * @return the value in the StudentGTID Label
 	 */
 	public String getStudentGTIDLabel() {
-		return "";
+		return this.getSelectedStudent().getGtid();
 	}
 	
 	/**
 	 * @return the value in the StudentEmail Label
 	 */
 	public String getStudentEmailLabel() {
-		return "";
+		return this.getSelectedStudent().getEmail();
 	}
 	
 	/**
 	 * @return the value in the StudentAttendance Label, cast to Integer
 	 */
 	public String getStudentAttendanceLabel() {
-		return "";
+		return Integer.toString(this.getSelectedStudent().getAttendance());
 	}
 	
 	public int getProjectTeamGradeLabel(int iProjectNumber) {
