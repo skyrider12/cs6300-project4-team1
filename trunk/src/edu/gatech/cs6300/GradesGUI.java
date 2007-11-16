@@ -58,7 +58,10 @@ public class GradesGUI {
 	 * Given a HashSet<Students> fill in combobox appropriately
 	 */
 	public void populateComboStudents(HashSet<Student> students) {
+
+		System.out.print("\nLoading");
 		int cntr=students.size();
+
 		for (Student student : students){
 			System.out.println(cntr-- + "students remaining");
 			//ComboBoxModel studentList = jComboBox.
@@ -69,25 +72,39 @@ public class GradesGUI {
 					+ "\nGTID: "+student.getGtid() 
 					+"\nEMAIL: "+student.getEmail()
 					+"\nAttendance: "+student.getAttendance()+"%";
+
+			System.out.print(".");
+
 			//System.out.println("Student "+s.stu.getName() +" info");
 			int ProjectNum=db.getNumProjects();
 	        for (int i=1; i<=ProjectNum; i++){
+
 	        	in = in + "\nProject "+i+" team: "+ db.getTeamName(student, "P"+i)
 		        +"\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i)
 		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
 		        +"\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i);
 	        }
+	        System.out.print(".");
 	        //System.out.println("Student "+s.stu.getName() +" project info added"); 
+
 	        for (int i=1; i<=db.getNumAssignments(); i++){
 	        	in = in + "\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student)
 	        	+"\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i);
 	        } 
+
+	        System.out.print(".");
 	        //System.out.println("Student "+s.stu.getName() +" assignment info added");
+
 	        s.info = in;
+
 			studentList.add(s);
+			System.out.print(".");
 			//System.out.println("Student "+s.stu.getName() +" added");
+
 		}
+		System.out.print("\n");
 		jComboBox.setSelectedIndex(0);
+
 	}
 	
 	/**
@@ -103,6 +120,8 @@ public class GradesGUI {
 	 * Given an index, set the selected Student
 	 */
 	public void setSelectedStudent(int index) {
+
+		System.out.println("setSelected: "+index);
 		if(index==3 && !flag) flag=true;
 		else flag=false; 
 		jComboBox.setSelectedIndex(index);
@@ -260,7 +279,7 @@ public class GradesGUI {
 
 			jComboBox.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					System.out.println("actionPerformed()");
+					//System.out.println("actionPerformed()");
 					JComboBox cb = (JComboBox)e.getSource();
 			        Student student = (Student)cb.getSelectedItem();
 			        
@@ -308,6 +327,7 @@ public class GradesGUI {
 
 			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					String filename = ((Student) jComboBox.getSelectedItem()).getName() + ".txt";
 					final JFileChooser fc = new JFileChooser();
 					int returnVal = fc.showSaveDialog(null);
 					
@@ -336,7 +356,7 @@ public class GradesGUI {
 		GradesGUI GGUI = new GradesGUI(gradesDB);
 		//System.out.println("Number of Students: "+GGUI.getNumStudentsInComboBox());
 		
-		System.out.println("End");
+		System.out.println("\nEnd");
 	}
 
 }
