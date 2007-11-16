@@ -55,6 +55,7 @@ public class GradesDB {
             Student student = new Student();
             student.setName(entry.getCustomElements().getValue("name"));
             student.setGTID(entry.getCustomElements().getValue("gtid"));
+            student.setEmail(entry.getCustomElements().getValue("email"));
             students.add(student);
         }
         

@@ -43,9 +43,9 @@ public class GradesGUITest extends TestCase {
         try { 
         	System.out.println(db.getNumStudents());
         	System.out.println(gradesGUI.getNumStudentsInComboBox());
-            /* check to make sure there are correct number of students */
-            assertEquals(db.getNumStudents(), gradesGUI.getNumStudentsInComboBox());
             
+        	/* check to make sure there are correct number of students */
+            assertEquals(db.getNumStudents(), gradesGUI.getNumStudentsInComboBox());           
         } catch (Exception e) {
             fail("Exception while populating combo students");
         }       
@@ -55,7 +55,7 @@ public class GradesGUITest extends TestCase {
         try {
             /* Select a student */
             gradesGUI.setSelectedStudent(3);
-            assertTrue(gradesGUI.getSelectedStudent().getName().compareTo("SomeName") == 0);
+            assertTrue(gradesGUI.getStudentNameLabel().compareTo(gradesGUI.getSelectedStudent().getName()) == 0);
         } catch (Exception e) {
             fail("Exception while setting selected student");
         }       
@@ -76,12 +76,27 @@ public class GradesGUITest extends TestCase {
         try {           
             /* Check to make sure the student's info is in the labels */
             assertTrue(gradesGUI.getStudentNameLabel().compareTo(selectedStudent.getName()) == 0);
-            assertTrue(gradesGUI.getStudentGTIDLabel().compareTo(selectedStudent.getGtid()) == 0);
-            assertTrue(gradesGUI.getStudentEmailLabel().compareTo(selectedStudent.getEmail()) == 0);
-            assertEquals(gradesGUI.getStudentAttendanceLabel(), selectedStudent.getAttendance());
         } catch (Exception e) {
-            fail("Exception while trying to populate selected student's personal info");
-        }       
+            fail("Exception while checking student's Name Label: " + e.getMessage());
+        }
+        
+        try {
+            assertTrue(gradesGUI.getStudentGTIDLabel().compareTo(selectedStudent.getGtid()) == 0);
+        } catch (Exception e) {
+            fail("Exception while checking student's GTID Label: " + e.getMessage());
+        }
+        
+        try {
+        	assertTrue(gradesGUI.getStudentEmailLabel().compareTo(selectedStudent.getEmail()) == 0);
+        } catch (Exception e) {
+            fail("Exception while checking student's Email Label: " + e.getMessage());
+        }
+        
+        try {
+        	assertEquals(gradesGUI.getStudentAttendanceLabel(), selectedStudent.getAttendance());
+        } catch (Exception e) {
+            fail("Exception while trying checking student's Attendance label: " + e.getMessage());
+        }
     }
     
     /**
@@ -105,12 +120,22 @@ public class GradesGUITest extends TestCase {
         try {
             /* student’s team's grades */
             assertEquals(gradesGUI.getProjectTeamGradeLabel(iProjectNumber), db.getTeamGrade(db.getTeamName(selectedStudent, projectName), projectName));
+        } catch (Exception e) {
+            fail("Exception while checking student's Team Grade Label");
+        }
+        
+        try {
             /* average grade across teams */
             assertEquals(gradesGUI.getProjectAverageGradeLabel(iProjectNumber), db.getAverageProjectGrade(projectName));
+        } catch (Exception e) {
+            fail("Exception while checking project's Average Team Grade Label");
+        }
+        
+        try {
             /* average contribution received by the student from his/her team members */
             assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), db.getContribution(selectedStudent, projectName));      
         } catch (Exception e) {
-            fail("Exception while checking combo-box project info");
+            fail("Exception while checking student's Average Contribution Label");
         }
     }
     
@@ -130,9 +155,14 @@ public class GradesGUITest extends TestCase {
         
         try {
             assertEquals(gradesGUI.getAssignmentAvgGradeLabel(2), db.getAverageAssignmentGrade("Assignment 2"));
+        } catch (Exception e) {
+            fail("Exception while checking assignment's Average Grade Label");
+        }
+        
+        try {
             assertEquals(gradesGUI.getStudentAssignmentGradeLabel(2), db.getStudentGrade("Assignment 2", selectedStudent));         
         } catch (Exception e) {
-            fail("Exception while checking combo-box assignment info");
+            fail("Exception while checking student's Assignment Grade Label");
         }       
     }
     

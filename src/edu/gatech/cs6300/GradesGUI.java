@@ -19,89 +19,53 @@ import java.io.PrintWriter;
 import javax.swing.JButton;
 
 public class GradesGUI {
-	
+		
 	private static JFrame jFrame;  //  @jve:decl-index=0:visual-constraint="107,6"
 	private static JPanel jContentPane;
 	private static JComboBox jComboBox;
 	private static JTextArea jTextArea;
 	private static JButton jButton;
-	private static ArrayList<studentInfo> studentList;
-	private boolean flag; 
-	private Student currentStudent; 
-	private class studentInfo{
-		Student stu;
-		String	info;
-	}
+	private ArrayList<Student> studentList;
 	
 	GradesDB db;
 	
 	public GradesGUI(GradesDB gDB){
 		this.db = gDB;
 		this.getJFrame();
-		if(studentList==null || studentList.size()==0)
-		{
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
-		jButton.setEnabled(false);
-		jTextArea.setEnabled(false);
+		if(this.studentList == null || this.studentList.size() == 0) {
+			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
+			jButton.setEnabled(false);
+			jTextArea.setEnabled(false);
+			studentList= new ArrayList<Student>();
 		}
-		if(studentList==null || studentList.size()==0)
-			studentList= new ArrayList<studentInfo>();
 		
-		if(jComboBox.getItemCount()==0) this.populateComboStudents(gDB.getStudents());
-		else jComboBox.setSelectedIndex(0);
+		/* When startup GUI, populate combo box */
+		if(jComboBox.getItemCount() == 0) {
+			this.populateComboStudents(gDB.getStudents());
+		} else {
+			jComboBox.setSelectedIndex(0);
+		}
+		
 		jFrame.setVisible(true);
-		
 	}
 	
 	
 	/**
 	 * Given a HashSet<Students> fill in combobox appropriately
+	 * Only fill with students names -- will lazy-load info when selected
 	 */
 	public void populateComboStudents(HashSet<Student> students) {
-
-		System.out.print("\nLoading");
-		int cntr=students.size();
-
+		System.out.println("\nLoading Combobox");
+		
 		for (Student student : students){
-			System.out.println(cntr-- + "students remaining");
-			//ComboBoxModel studentList = jComboBox.
 			jComboBox.addItem(student);
-			studentInfo s = new studentInfo();
-			s.stu = student;
-			String in = "Name: "+student.getName()
-					+ "\nGTID: "+student.getGtid() 
-					+"\nEMAIL: "+student.getEmail()
-					+"\nAttendance: "+student.getAttendance()+"%";
-
-
-			int ProjectNum=db.getNumProjects();
-	        for (int i=1; i<=ProjectNum; i++){
-
-	        	in = in + "\nProject "+i+" team: "+ db.getTeamName(student, "P"+i)
-		        +"\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i)
-		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
-		        +"\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i);
-	        }
-	        for (int i=1; i<=db.getNumAssignments(); i++){
-	        	in = in + "\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student)
-	        	+"\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i);
-	        } 
-
-	        s.info = in;
-
-			studentList.add(s);
-
 		}
-		System.out.print("\n");
-		jComboBox.setSelectedIndex(0);
-
 	}
-	
+		
 	/**
 	 * Count number of students in the combobox
 	 */
 	public int getNumStudentsInComboBox() {
-		flag=false; 
 		return jComboBox.getItemCount();
 		
 	}
@@ -110,10 +74,7 @@ public class GradesGUI {
 	 * Given an index, set the selected Student
 	 */
 	public void setSelectedStudent(int index) {
-
-		System.out.println("setSelected: "+index);
-		if(index==3 && !flag) flag=true;
-		else flag=false; 
+		System.out.println("setSelected: " + index); 
 		jComboBox.setSelectedIndex(index);
 	}
 	
@@ -121,101 +82,100 @@ public class GradesGUI {
 	 * @return the Student currently selected in the combobox
 	 */
 	public Student getSelectedStudent() {		
-		if(flag) 
-		{
-			Student ss=new Student();
-			ss.setName("SomeName");
-			return ss; 
-		}
-		flag =false; 
-		return (Student) jComboBox.getSelectedItem();
-		
+		return (Student) jComboBox.getSelectedItem();		
 	}
 	
 	/**
 	 * @return the value in the StudentName Label
 	 */
 	public String getStudentNameLabel() {
-		flag=false; 
-		return this.getSelectedStudent().getName();
+		return getLabelValue("Name: ");
 	}
 	
 	/**
 	 * @return the value in the StudentGTID Label
 	 */
 	public String getStudentGTIDLabel() {
-		flag=false; 
-		return this.getSelectedStudent().getGtid();
+		return getLabelValue("GTID: ");
 	}
 	
 	/**
 	 * @return the value in the StudentEmail Label
 	 */
 	public String getStudentEmailLabel() {
-		flag=false; 
-		return this.getSelectedStudent().getEmail();
+		return getLabelValue("Email: ");
+	}
+	
+	private String getLabelValue(String sLabel) {
+		String sValue = null;
+		int iLabelLength = sLabel.length();
+		
+		String text = jTextArea.getText();
+				
+		if (text.length() > 0) {
+			int iLabelIndex = text.indexOf(sLabel);
+			if (iLabelIndex >= 0) {
+				sValue = text.substring(iLabelIndex + iLabelLength, text.indexOf("\n", iLabelIndex));
+			}
+		}
+		
+		// System.out.println("Got Label Value: " + sValue);
+		
+		return sValue;
 	}
 	
 	/**
 	 * @return the value in the StudentAttendance Label, cast to Integer
 	 */
 	public int getStudentAttendanceLabel() {
-		flag=false;
-		String res=null; 
-		int intRes;
-		String text=jTextArea.getText();
-		//System.out.println("This is the text of jtextArea: "+text);
-		if(text.length()!=0)
-		{
-			res= text.substring(text.indexOf("Attendance: ")+12,text.indexOf("%"));
-			//System.out.println(res);
-			//System.out.println(text.charAt(text.indexOf("Attendance: ")+12));
-		}
-		else
-			return 0;
+		String sAttendance = null; 
+		int iAttendance = 0;
+		String text = jTextArea.getText();
 		
-		try
-		{
-			intRes= Integer.parseInt(res);
+		if(text.length() > 0) {
+			sAttendance = text.substring(text.indexOf("Attendance: ")+12,text.indexOf("%"));
+			
+			try {
+				iAttendance= Integer.parseInt(sAttendance);
+			} catch(Exception ex) {
+				System.err.println(sAttendance);
+			}
 		}
-		catch(Exception ex)
-		{
-			System.err.println(res);
-			intRes= this.getSelectedStudent().getAttendance();
-		}
-		return intRes;
 		
+		// System.out.println("Got Attendance Label: " + iAttendance);
+		
+		return iAttendance;		
+	}
+	
+	private double getGradeLabelValue(String sLabel) {
+		String sValue = getLabelValue(sLabel);
+		double dValue = 0;
+		try {
+			dValue= Double.parseDouble(sValue);
+		} catch(Exception ex) {
+			System.err.println("Error parsing double of: " + sLabel + ", " + sValue);
+		}
+		return dValue;
 	}
 	
 	public double getProjectTeamGradeLabel(int iProjectNumber) {
-		flag=false;
-		
-		return (double)db.getTeamGrade(db.getTeamName(getSelectedStudent(), "P"+iProjectNumber), "P"+iProjectNumber);
-		//return -1;
+		return getGradeLabelValue("Project " + iProjectNumber + " team grade: ");
 	}
 	
 	public double getProjectContributionLabel(int iProjectNumber) {
-		flag=false;
-		return db.getContribution(getSelectedStudent(), "P"+iProjectNumber);
-		//return -1;
+		return getGradeLabelValue("Project " + iProjectNumber + " Average contribution: ");
 	}
 	
 	public double getProjectAverageGradeLabel(int iProjectNumber) {
-		flag=false;
-		return db.getAverageProjectGrade("P"+iProjectNumber);
-		//return -1;
+		return getGradeLabelValue("Project " + iProjectNumber + " Average grade: ");
 	}
 	
 	public double getAssignmentAvgGradeLabel(int iAssignmentNumber) {
-		flag=false;
-		return db.getAverageAssignmentGrade("Assignment "+iAssignmentNumber);
-		//return -1;
+		return getGradeLabelValue("Assignment " + iAssignmentNumber + " Average grade: ");
 	}
 	
 	public double getStudentAssignmentGradeLabel(int iAssignmentNumber) {
-		flag=false;
-		return db.getStudentGrade("Assignment "+iAssignmentNumber, getSelectedStudent());
-		//return -1;
+		return getGradeLabelValue("Assignment " + iAssignmentNumber + " grade: ");
 	}
 
 	/**
@@ -269,21 +229,34 @@ public class GradesGUI {
 
 			jComboBox.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					//System.out.println("actionPerformed()");
+					System.out.println("actionPerformed()");
 					JComboBox cb = (JComboBox)e.getSource();
-			        Student student = (Student)cb.getSelectedItem();
 			        
-			        if (studentList!=null){
-				        for (int i=0; i<studentList.size(); i++){
-				        	if (student.equals(studentList.get(i).stu)){
-				        		jTextArea.setText(studentList.get(i).info);
-				        		jButton.setEnabled(true);
-								jTextArea.setEnabled(true);
-								
-								setSelectedStudent(cb.getSelectedIndex());
-				        	}
-				        }
-			        }  
+					/* Get the selected student */
+					Student selectedStudent = (Student)cb.getSelectedItem();
+	        		
+					/* Get student's basic info for display */
+					String sBasicInfo = selectedStudent.getBasicInfoForTextarea(db);
+					
+					/* Fill the textarea with the selected student's info and "Loading..." */
+			        jTextArea.setText(sBasicInfo + "\n\nLoading...\n");
+					
+			        /* Get student's project and assignment info for display */
+			        /* This takes a long time ... */
+					String sProjectInfo = selectedStudent.getProjectInfoForTextarea(db);
+					String sAssignmentInfo = selectedStudent.getAssignmentInfoForTextarea(db);
+					
+					/* After get back project and assignment info, reset text area content */
+					jTextArea.setText(sBasicInfo + sProjectInfo + sAssignmentInfo);
+			        
+			        /* Enable save button (since diff student) */
+			        /* Should this ever really be disabled?? */
+	        		jButton.setEnabled(true);
+	        		
+					jTextArea.setEnabled(true);
+					
+					/* TODO: Shouldn't have to do this */
+					/* setSelectedStudent(cb.getSelectedIndex()); */
 				}
 			});
 		}
