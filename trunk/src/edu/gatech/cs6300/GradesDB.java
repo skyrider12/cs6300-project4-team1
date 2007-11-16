@@ -19,8 +19,9 @@ public class GradesDB {
     
     public GradesDB(Session session) {
         this.session = session;
-        
+        if(session.service==null) {System.err.println("session.service=null, exiting"); System.exit(1);}
         List sheets = getSpreadsheets(session.service);
+        if(sheets==null) {System.err.println("sheets=null, exiting"); System.exit(1);}
         spreadsheet = getSpreadsheet(sheets, Constants.GRADES_DB);
     }
     
@@ -294,7 +295,10 @@ public class GradesDB {
     }
     
     public ListFeed getFeed(SpreadsheetService service, WorksheetEntry worksheet){
-        URL listFeedUrl = worksheet.getListFeedUrl();
+        if(worksheet==null ) {System.err.println("worksheet null in getFeed, exiting");System.exit(1);}
+        if(service==null ) {System.err.println("service null in getFeed, exiting");System.exit(1);}        
+    	URL listFeedUrl = worksheet.getListFeedUrl();
+
         ListFeed feed = null;
 
         try {
