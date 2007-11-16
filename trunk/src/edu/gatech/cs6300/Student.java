@@ -9,10 +9,12 @@ public class Student {
     private String email;
     
     public Student() {
+
     	this.name = "";
     	this.gtid = "";
     	this.attendance = 0;
         this.email = "";
+
     }
 
     public String getName(){
@@ -52,7 +54,7 @@ public class Student {
     }
     
     public int getProjectTeam(int iProjectNumber) {
-    	return -1;
+    	return 1;
     }
     
 	public String getBasicInfoForTextarea(GradesDB db) {
@@ -118,10 +120,9 @@ public class Student {
 
 		return info.toString();
 	}
-    
+
     public String toString() {
     	return this.name;
     }
-    
-    
+
 }
