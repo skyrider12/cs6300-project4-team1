@@ -56,7 +56,7 @@ public class GradesGUI {
 	 * Only fill with students names -- will lazy-load info when selected
 	 */
 	public void populateComboStudents(HashSet<Student> students) {
-		System.out.println("\nLoading Combobox");
+//		System.out.println("\nLoading Combobox");
 		
 		for (Student student : students){
 			jComboBox.addItem(student);
@@ -75,7 +75,7 @@ public class GradesGUI {
 	 * Given an index, set the selected Student
 	 */
 	public void setSelectedStudent(int index) {
-		System.out.println("setSelected: " + index); 
+//		System.out.println("setSelected: " + index); 
 		jComboBox.setSelectedIndex(index);
 	}
 	
@@ -223,14 +223,14 @@ public class GradesGUI {
 			jComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
 				public void propertyChange(java.beans.PropertyChangeEvent e) {
 					if ((e.getPropertyName().equals("enabled"))) {
-						System.out.println("propertyChange(enabled)"); // TODO Auto-generated property Event stub "enabled" 
+//						System.out.println("propertyChange(enabled)"); // TODO Auto-generated property Event stub "enabled" 
 					}
 				}
 			});
 
 			jComboBox.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					System.out.println("actionPerformed()");
+//					System.out.println("actionPerformed()");
 					JComboBox cb = (JComboBox)e.getSource();
 			        
 					/* Get the selected student */
@@ -323,14 +323,22 @@ public class GradesGUI {
 	}
 	
 	public static void main (String[] args){
-		System.out.println("Start");
+//		System.out.println("Start");
 		Session session = new Session();
 		session.login(Constants.USERNAME, Constants.PASSWORD);
 		GradesDB gradesDB = new GradesDB(session);	
 		GradesGUI GGUI = new GradesGUI(gradesDB);
 		//System.out.println("Number of Students: "+GGUI.getNumStudentsInComboBox());
 		
-		System.out.println("\nEnd");
+//		System.out.println("\nEnd");
 	}
+	
+//	/**
+//	 * The current Student information should be saved
+//	 * to a specified file.
+//	 */
+//	public void testOnSaveButtonClicked() {
+//		
+//	}
 
 }

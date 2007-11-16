@@ -349,5 +349,4 @@ public class GradesDB {
     public int getNum(ListFeed feed) {
         return feed.getEntries().size();
     }
-  
 }
