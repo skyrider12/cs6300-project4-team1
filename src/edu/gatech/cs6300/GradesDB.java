@@ -153,6 +153,8 @@ public class GradesDB {
         //String newAssignment = assignmentp;
         
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Grades");
+        if(worksheet==null ) {System.err.println("worksheet null in getStudentGrade - Rerun the program, exiting");System.exit(1);}
+        if(session.service==null ) {System.err.println("service null in getStudentGrade - Rerun the program, exiting");System.exit(1);}
         ListFeed feed = getFeed(session.service, worksheet);
         
         double grade = 0;
@@ -170,8 +172,11 @@ public class GradesDB {
 
     public String getTeamName(Student student, String project) {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Teams");
+        if(worksheet==null ) {System.err.println("worksheet null in getTeamName,Rerun the program - exiting");System.exit(1);}
+        if(session.service==null ) {System.err.println("service null in getTeamName, Rerun the program - exiting");System.exit(1);}
         ListFeed feed = getFeed(session.service, worksheet);
-        
+    
+        if(feed==null || feed.toString().length()==0) {System.err.println("No feed obtained in getTeamName. Rerun the program or contact your system administrator. Exiting. ");System.exit(1);}
         if (student != null) {
 	        for (ListEntry entry : feed.getEntries()) {
 	            for(String tag : entry.getCustomElements().getTags()) {
@@ -295,8 +300,8 @@ public class GradesDB {
     }
     
     public ListFeed getFeed(SpreadsheetService service, WorksheetEntry worksheet){
-        if(worksheet==null ) {System.err.println("worksheet null in getFeed, exiting");System.exit(1);}
-        if(service==null ) {System.err.println("service null in getFeed, exiting");System.exit(1);}        
+        if(worksheet==null ) {System.err.println("worksheet null in getFeed, Rerun the program - exiting");System.exit(1);}
+        if(service==null ) {System.err.println("service null in getFeed, Rerun the program - exiting");System.exit(1);}        
     	URL listFeedUrl = worksheet.getListFeedUrl();
 
         ListFeed feed = null;
@@ -314,6 +319,8 @@ public class GradesDB {
         
         String columnTitle = sColumnTitle.toLowerCase().replaceAll(" ", "");
         ArrayList<String> columns = new ArrayList<String>();
+        if(worksheet==null ) {System.err.println("worksheet null in getColumn, Rerun the program - exiting");System.exit(1);}
+        if(service==null ) {System.err.println("service null in getColumn, Rerun the program - exiting");System.exit(1);}
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed feed = null;
 

@@ -20,11 +20,11 @@ import javax.swing.JButton;
 
 public class GradesGUI {
 	
-	private JFrame jFrame;  //  @jve:decl-index=0:visual-constraint="107,6"
-	private JPanel jContentPane;
+	private static JFrame jFrame;  //  @jve:decl-index=0:visual-constraint="107,6"
+	private static JPanel jContentPane;
 	private static JComboBox jComboBox;
-	private JTextArea jTextArea;
-	private JButton jButton;
+	private static JTextArea jTextArea;
+	private static JButton jButton;
 	private static ArrayList<studentInfo> studentList;
 	private boolean flag; 
 	private Student currentStudent; 
@@ -38,14 +38,19 @@ public class GradesGUI {
 	public GradesGUI(GradesDB gDB){
 		this.db = gDB;
 		this.getJFrame();
-		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
-		this.jButton.setEnabled(false);
-		this.jTextArea.setEnabled(false);
+		if(studentList==null || studentList.size()==0)
+		{
+		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
+		jButton.setEnabled(false);
+		jTextArea.setEnabled(false);
+		}
 		if(studentList==null || studentList.size()==0)
 			studentList= new ArrayList<studentInfo>();
 		
 		if(jComboBox.getItemCount()==0) this.populateComboStudents(gDB.getStudents());
+		else jComboBox.setSelectedIndex(0);
 		jFrame.setVisible(true);
+		
 	}
 	
 	
@@ -53,7 +58,9 @@ public class GradesGUI {
 	 * Given a HashSet<Students> fill in combobox appropriately
 	 */
 	public void populateComboStudents(HashSet<Student> students) {
+		int cntr=students.size();
 		for (Student student : students){
+			System.out.println(cntr-- + "students remaining");
 			//ComboBoxModel studentList = jComboBox.
 			jComboBox.addItem(student);
 			studentInfo s = new studentInfo();
@@ -63,7 +70,8 @@ public class GradesGUI {
 					+"\nEMAIL: "+student.getEmail()
 					+"\nAttendance: "+student.getAttendance()+"%";
 			//System.out.println("Student "+s.stu.getName() +" info");
-	        for (int i=1; i<=db.getNumProjects(); i++){
+			int ProjectNum=db.getNumProjects();
+	        for (int i=1; i<=ProjectNum; i++){
 	        	in = in + "\nProject "+i+" team: "+ db.getTeamName(student, "P"+i)
 		        +"\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i)
 		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
@@ -79,6 +87,7 @@ public class GradesGUI {
 			studentList.add(s);
 			//System.out.println("Student "+s.stu.getName() +" added");
 		}
+		jComboBox.setSelectedIndex(0);
 	}
 	
 	/**
@@ -142,8 +151,31 @@ public class GradesGUI {
 	 * @return the value in the StudentAttendance Label, cast to Integer
 	 */
 	public int getStudentAttendanceLabel() {
-		flag=false; 
-		return this.getSelectedStudent().getAttendance();
+		flag=false;
+		String res=null; 
+		int intRes;
+		String text=jTextArea.getText();
+		//System.out.println("This is the text of jtextArea: "+text);
+		if(text.length()!=0)
+		{
+			res= text.substring(text.indexOf("Attendance: ")+12,text.indexOf("%"));
+			//System.out.println(res);
+			//System.out.println(text.charAt(text.indexOf("Attendance: ")+12));
+		}
+		else
+			return 0;
+		
+		try
+		{
+			intRes= Integer.parseInt(res);
+		}
+		catch(Exception ex)
+		{
+			System.err.println(res);
+			intRes= this.getSelectedStudent().getAttendance();
+		}
+		return intRes;
+		
 	}
 	
 	public double getProjectTeamGradeLabel(int iProjectNumber) {
