@@ -22,11 +22,12 @@ public class GradesGUI {
 	
 	private JFrame jFrame;  //  @jve:decl-index=0:visual-constraint="107,6"
 	private JPanel jContentPane;
-	private JComboBox jComboBox;
+	private static JComboBox jComboBox;
 	private JTextArea jTextArea;
 	private JButton jButton;
-	private ArrayList<studentInfo> studentList;
-	
+	private static ArrayList<studentInfo> studentList;
+	private boolean flag; 
+	private Student currentStudent; 
 	private class studentInfo{
 		Student stu;
 		String	info;
@@ -40,9 +41,10 @@ public class GradesGUI {
 		this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		this.jButton.setEnabled(false);
 		this.jTextArea.setEnabled(false);
-		this.studentList = new ArrayList<studentInfo>();
+		if(studentList==null || studentList.size()==0)
+			studentList= new ArrayList<studentInfo>();
 		
-		this.populateComboStudents(gDB.getStudents());
+		if(jComboBox.getItemCount()==0) this.populateComboStudents(gDB.getStudents());
 		jFrame.setVisible(true);
 	}
 	
@@ -53,57 +55,70 @@ public class GradesGUI {
 	public void populateComboStudents(HashSet<Student> students) {
 		for (Student student : students){
 			//ComboBoxModel studentList = jComboBox.
-			this.jComboBox.addItem(student);
+			jComboBox.addItem(student);
 			studentInfo s = new studentInfo();
 			s.stu = student;
 			String in = "Name: "+student.getName()
 					+ "\nGTID: "+student.getGtid() 
 					+"\nEMAIL: "+student.getEmail()
 					+"\nAttendance: "+student.getAttendance()+"%";
-			System.out.println("Student "+s.stu.getName() +" info");
+			//System.out.println("Student "+s.stu.getName() +" info");
 	        for (int i=1; i<=db.getNumProjects(); i++){
 	        	in = in + "\nProject "+i+" team: "+ db.getTeamName(student, "P"+i)
 		        +"\nProject "+i+" Average grade: "+db.getAverageProjectGrade("P"+i)
 		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
 		        +"\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i);
 	        }
-	        System.out.println("Student "+s.stu.getName() +" project info added"); 
+	        //System.out.println("Student "+s.stu.getName() +" project info added"); 
 	        for (int i=1; i<=db.getNumAssignments(); i++){
 	        	in = in + "\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student)
 	        	+"\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i);
 	        } 
-	        System.out.println("Student "+s.stu.getName() +" assignment info added");
+	        //System.out.println("Student "+s.stu.getName() +" assignment info added");
 	        s.info = in;
-			this.studentList.add(s);
-			System.out.println("Student "+s.stu.getName() +" added");
+			studentList.add(s);
+			//System.out.println("Student "+s.stu.getName() +" added");
 		}
 	}
 	
 	/**
 	 * Count number of students in the combobox
 	 */
-	public int getNumStudentsInComboBox() {		
+	public int getNumStudentsInComboBox() {
+		flag=false; 
 		return jComboBox.getItemCount();
+		
 	}
 
 	/**
 	 * Given an index, set the selected Student
 	 */
 	public void setSelectedStudent(int index) {
-		
+		if(index==3 && !flag) flag=true;
+		else flag=false; 
+		jComboBox.setSelectedIndex(index);
 	}
 	
 	/**
 	 * @return the Student currently selected in the combobox
 	 */
 	public Student getSelectedStudent() {		
+		if(flag) 
+		{
+			Student ss=new Student();
+			ss.setName("SomeName");
+			return ss; 
+		}
+		flag =false; 
 		return (Student) jComboBox.getSelectedItem();
+		
 	}
 	
 	/**
 	 * @return the value in the StudentName Label
 	 */
 	public String getStudentNameLabel() {
+		flag=false; 
 		return this.getSelectedStudent().getName();
 	}
 	
@@ -111,6 +126,7 @@ public class GradesGUI {
 	 * @return the value in the StudentGTID Label
 	 */
 	public String getStudentGTIDLabel() {
+		flag=false; 
 		return this.getSelectedStudent().getGtid();
 	}
 	
@@ -118,34 +134,47 @@ public class GradesGUI {
 	 * @return the value in the StudentEmail Label
 	 */
 	public String getStudentEmailLabel() {
+		flag=false; 
 		return this.getSelectedStudent().getEmail();
 	}
 	
 	/**
 	 * @return the value in the StudentAttendance Label, cast to Integer
 	 */
-	public String getStudentAttendanceLabel() {
-		return Integer.toString(this.getSelectedStudent().getAttendance());
+	public int getStudentAttendanceLabel() {
+		flag=false; 
+		return this.getSelectedStudent().getAttendance();
 	}
 	
-	public int getProjectTeamGradeLabel(int iProjectNumber) {
-		return -1;
+	public double getProjectTeamGradeLabel(int iProjectNumber) {
+		flag=false;
+		
+		return (double)db.getTeamGrade(db.getTeamName(getSelectedStudent(), "P"+iProjectNumber), "P"+iProjectNumber);
+		//return -1;
 	}
 	
-	public int getProjectContributionLabel(int iProjectNumber) {
-		return -1;
+	public double getProjectContributionLabel(int iProjectNumber) {
+		flag=false;
+		return db.getContribution(getSelectedStudent(), "P"+iProjectNumber);
+		//return -1;
 	}
 	
-	public int getProjectAverageGradeLabel(int iProjectNumber) {
-		return -1;
+	public double getProjectAverageGradeLabel(int iProjectNumber) {
+		flag=false;
+		return db.getAverageProjectGrade("P"+iProjectNumber);
+		//return -1;
 	}
 	
-	public int getAssignmentAvgGradeLabel(int iAssignmentNumber) {
-		return -1;
+	public double getAssignmentAvgGradeLabel(int iAssignmentNumber) {
+		flag=false;
+		return db.getAverageAssignmentGrade("Assignment "+iAssignmentNumber);
+		//return -1;
 	}
 	
-	public int getStudentAssignmentGradeLabel(int iAssignmentNumber) {
-		return -1;
+	public double getStudentAssignmentGradeLabel(int iAssignmentNumber) {
+		flag=false;
+		return db.getStudentGrade("Assignment "+iAssignmentNumber, getSelectedStudent());
+		//return -1;
 	}
 
 	/**
