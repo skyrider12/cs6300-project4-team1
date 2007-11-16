@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import java.awt.Rectangle;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -291,6 +292,16 @@ public class GradesGUI {
 			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String filename = ((Student) jComboBox.getSelectedItem()).getName() + ".txt";
+					
+				    try {
+				        BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+				        out.write(jTextArea.getText());
+				        out.close();
+				        jButton.setEnabled(false);
+				    } catch (IOException ioe) {
+				    	ioe.printStackTrace();
+				    }
+					
 					final JFileChooser fc = new JFileChooser();
 					int returnVal = fc.showSaveDialog(null);
 					
