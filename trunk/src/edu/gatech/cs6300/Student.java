@@ -54,7 +54,7 @@ public class Student {
     }
     
     public int getProjectTeam(int iProjectNumber) {
-    	return 1;
+    	return -1;
     }
     
 	public String getBasicInfoForTextarea(GradesDB db) {
@@ -77,7 +77,7 @@ public class Student {
 	public String getProjectInfoForTextarea(GradesDB db) {
 		StringBuilder info = new StringBuilder();
 		
-		System.out.println("Getting project info for " + this);
+//		System.out.println("Getting project info for " + this);
 		/* Get project info from DB */
 		int iNumProjects = db.getNumProjects();
 		for (int i=1; i <= iNumProjects; i++){
@@ -105,7 +105,7 @@ public class Student {
 	public String getAssignmentInfoForTextarea(GradesDB db) {
 		StringBuilder info = new StringBuilder();
 		
-		System.out.println("Getting assignment info for " + this);
+//		System.out.println("Getting assignment info for " + this);
 		int iNumAssignments = db.getNumAssignments();
 		for (int i=1; i <= iNumAssignments; i++) {
 			info.append("\nAssignment ");

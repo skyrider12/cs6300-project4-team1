@@ -41,8 +41,8 @@ public class GradesGUITest extends TestCase {
      */
     public void testPopulateComboStudents() {
         try { 
-        	System.out.println(db.getNumStudents());
-        	System.out.println(gradesGUI.getNumStudentsInComboBox());
+//        	System.out.println(db.getNumStudents());
+//        	System.out.println(gradesGUI.getNumStudentsInComboBox());
             
         	/* check to make sure there are correct number of students */
             assertEquals(db.getNumStudents(), gradesGUI.getNumStudentsInComboBox());           
@@ -113,9 +113,7 @@ public class GradesGUITest extends TestCase {
         String projectName = "P" + iProjectNumber;
         /* Get currently selected student */
         Student selectedStudent = gradesGUI.getSelectedStudent();
-        
-        //int iTeamNumber = selectedStudent.getProjectTeam(iProjectNumber);
-        
+                
         /* Test student's project info against labels */
         try {
             /* student’s team's grades */
@@ -164,14 +162,6 @@ public class GradesGUITest extends TestCase {
         } catch (Exception e) {
             fail("Exception while checking student's Assignment Grade Label");
         }       
-    }
-    
-    /**
-     * The current Student information should be saved
-     * to a specified file.
-     */
-    public void testOnSaveButtonClicked() {
-        
     }
     
 }
