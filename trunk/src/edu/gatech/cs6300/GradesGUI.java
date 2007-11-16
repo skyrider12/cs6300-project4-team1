@@ -73,9 +73,7 @@ public class GradesGUI {
 					+"\nEMAIL: "+student.getEmail()
 					+"\nAttendance: "+student.getAttendance()+"%";
 
-			System.out.print(".");
 
-			//System.out.println("Student "+s.stu.getName() +" info");
 			int ProjectNum=db.getNumProjects();
 	        for (int i=1; i<=ProjectNum; i++){
 
@@ -84,22 +82,14 @@ public class GradesGUI {
 		        +"\nProject "+i+" team grade: "+db.getTeamGrade(db.getTeamName(student, "P"+i), "P"+i)
 		        +"\nProject "+i+" Average contribution: "+db.getContribution(student, "P"+i);
 	        }
-	        System.out.print(".");
-	        //System.out.println("Student "+s.stu.getName() +" project info added"); 
-
 	        for (int i=1; i<=db.getNumAssignments(); i++){
 	        	in = in + "\nAssignment "+i+" grade: "+db.getStudentGrade("assignment "+i, student)
 	        	+"\nAssignment "+i+" Average grade: "+db.getAverageAssignmentGrade("assignment "+i);
 	        } 
 
-	        System.out.print(".");
-	        //System.out.println("Student "+s.stu.getName() +" assignment info added");
-
 	        s.info = in;
 
 			studentList.add(s);
-			System.out.print(".");
-			//System.out.println("Student "+s.stu.getName() +" added");
 
 		}
 		System.out.print("\n");
