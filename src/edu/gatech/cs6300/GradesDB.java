@@ -5,11 +5,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
+import java.util.Map;
 
 import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.client.spreadsheet.*;
 
-public class GradesDB {
+public class GradesDB implements OverallGradeCalculator{
 
     Session session;
     
@@ -350,4 +351,34 @@ public class GradesDB {
     public int getNum(ListFeed feed) {
         return feed.getEntries().size();
     }
+
+	public Map<Student, Double> getAllGrades() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public double getAverageGrade() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String getFormula() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public double getMedianGrade() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double getStudentGrade(Student student) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setFormula(String formula) {
+		// TODO Auto-generated method stub
+		
+	}
 }
