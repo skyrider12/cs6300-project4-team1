@@ -197,6 +197,7 @@ public class GradesDB {
 
         double val = 0;
         for (ListEntry entry : feed.getEntries()) {
+        	
           String studentName = entry.getCustomElements().getValue("students"); 
           if (studentName != null && studentName.equals(student.getName())) {
               val = Double.parseDouble(entry.getCustomElements().getValue("average")); 
