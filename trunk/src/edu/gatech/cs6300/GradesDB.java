@@ -12,11 +12,21 @@ import com.google.gdata.client.spreadsheet.*;
 
 public class GradesDB implements OverallGradeCalculator{
 
-    Session session;
-    
+    Session session;    
     SpreadsheetEntry spreadsheet;
-    
     DecimalFormat formatter = new DecimalFormat("#0.0#");
+    Map<Student, Double> grade;
+    String Formula;
+    formulae Form = new formulae();
+    ArrayList<Project> projects;
+    ArrayList<Assignment> assignments;
+    
+    private class formulae {
+    	double AS; /*average grade in the assignments*/
+    	int AT; /*attendance*/
+    	ArrayList<Double> PR; /*Team grade in Proejct n*/
+    	ArrayList<Double> IC; /*Average individual contribution in Project n*/
+    }
     
     public GradesDB(Session session) {
         this.session = session;
@@ -24,6 +34,8 @@ public class GradesDB implements OverallGradeCalculator{
         List sheets = getSpreadsheets(session.service);
         if(sheets==null) {System.err.println("sheets=null, exiting"); System.exit(1);}
         spreadsheet = getSpreadsheet(sheets, Constants.GRADES_DB);
+        projects = new ArrayList<Project>();
+        assignments = new ArrayList<Assignment>();
     }
     
     public int getNumStudents() {
@@ -108,25 +120,29 @@ public class GradesDB implements OverallGradeCalculator{
         return null;
     }
  
-    /**
-     *
-     */
-    public ArrayList<String> getProjects() {
+    public ArrayList<Project> getProjects() {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
-        ArrayList<String> projects = getColumn(session.service, worksheet, "projects");
-
-        return projects;
+        Project p = new Project ();
+        for (int i=0; i<getColumn(session.service, worksheet, "projects").size(); i++){
+        	p.Name = getColumn(session.service, worksheet, "projects").get(i);
+        	p.Description = getColumn(session.service, worksheet, "description").get(i);
+        	//p.Teams
+        	this.projects.add(p);
+        }
+        return this.projects;
     }
 
-    /**
-     * 
-     * @return
-     */
-    public ArrayList<String> getAssignments() {
+    public ArrayList<Assignment> getAssignments() {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
+        Assignment a = new Assignment ();
         ArrayList<String> assignments = getColumn(session.service, worksheet, "assignments");
-
-        return assignments;
+        for (int i=0; i<getColumn(session.service, worksheet, "assignments").size(); i++){
+        	a.number = Integer.parseInt(getColumn(session.service, worksheet, "assignments").get(i).replaceFirst("assignment ", ""));
+        	a.Description = getColumn(session.service, worksheet, "description").get(i);
+        	//a.Scores
+        	this.assignments.add(a);
+        }
+        return this.assignments;
     }
     
     public double getAverageAssignmentGrade(String assignmentp) {
@@ -343,28 +359,61 @@ public class GradesDB implements OverallGradeCalculator{
 //                    }
 //                }
             }
-        }
-        
+        }      
         return columns;
     }
+    
+    public ListFeed getRow(SpreadsheetService service, WorksheetEntry worksheet, String sRowTitle) {
+    	URL listFeedUrl = worksheet.getListFeedUrl();
+    	ListFeed feed = null;
 
+    	try {
+    		feed = service.getFeed(listFeedUrl, ListFeed.class);    
+    	} catch (Exception e) {
+    		/* exception ! */
+    	}
+
+    	if (feed != null) {     	    	
+    		for (ListEntry Lentry : feed.getEntries()) {
+    			if (Lentry.getTitle().getPlainText().equals(sRowTitle)){
+    				for (String tag : Lentry.getCustomElements().getTags()) {
+    				}
+    			}
+    		}
+    	}
+    	return feed;
+    }
+
+    public HashSet<Student> getMember() {
+    	String worksheetName;
+    	
+    	for (int i=0; i<this.getNumProjects(); i++){
+    		worksheetName = "P"+i+" Teams";
+    		WorksheetEntry worksheet = getWorksheet(spreadsheet, "P1 Teams");
+    	}
+    	
+        
+    	this.getRow(session.service, worksheet, sRowTitle)
+    }
+    
     public int getNum(ListFeed feed) {
         return feed.getEntries().size();
     }
 
 	public Map<Student, Double> getAllGrades() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.grade;
 	}
 
 	public double getAverageGrade() {
-		// TODO Auto-generated method stub
-		return 0;
+		double sum = 0;
+		for (Student s: this.getStudents()){
+			sum = sum + grade.get(s);
+		}
+		return sum/this.grade.size();
 	}
 
 	public String getFormula() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Formula;
 	}
 
 	public double getMedianGrade() {
@@ -373,12 +422,25 @@ public class GradesDB implements OverallGradeCalculator{
 	}
 
 	public double getStudentGrade(Student student) {
-		// TODO Auto-generated method stub
-		return 0;
+		return grade.get(student);
 	}
 
 	public void setFormula(String formula) {
-		// TODO Auto-generated method stub
+		this.Formula = formula;
+	}
+	
+	public void parseFormula(){
+		String [] sformula = this.Formula.split(" ");
+		for (String s : sformula){
+		}
 		
+	}
+	
+	public static void main(String args[]) {
+		Session session = new Session();
+		session.login(Constants.USERNAME, Constants.PASSWORD);
+		GradesDB gradesDB = new GradesDB(session);
+		gradesDB.setFormula("AS * 0.2 + AT * 0.2 + ((PR1 + PR2 + PR3)/3) * 0.6"); 
+		gradesDB.parseFormula();
 	}
 }

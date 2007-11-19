@@ -3,50 +3,58 @@ package edu.gatech.cs6300;
 import java.util.HashSet;
 
 public class Project implements ProjectInterface{
+	HashSet<Team> Teams;
+	String Name;
+	String Description;
+	GradesDB db;
+	
+	public Project(){
+		Teams = new HashSet<Team> ();
+	}
 
 	public void addTeam(Team team) {
-		// TODO Auto-generated method stub
-		
+		this.Teams.add(team);
 	}
 
 	public int getAverageScore() {
-		// TODO Auto-generated method stub
-		return 0;
+		int sum = 0;
+		for (Team team: Teams){
+			sum = sum+team.score;
+		}
+		return sum/Teams.size();
 	}
 
 	public String getProjectDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Description;
 	}
 
 	public String getProjectName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Name;
 	}
 
 	public Team getTeamByName(String teamName) {
-		// TODO Auto-generated method stub
+		for (Team team: Teams){
+			if (teamName.equals(team.TeamName)){
+				return team;
+			}
+		}
 		return null;
 	}
 
 	public HashSet<Team> getTeams() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Teams;
 	}
 
 	public void setProjectDescription(String projectDescription) {
-		// TODO Auto-generated method stub
-		
+		this.Description = projectDescription;
 	}
 
 	public void setProjectName(String projectName) {
-		// TODO Auto-generated method stub
-		
+		this.Name = projectName;
 	}
 
 	public void setTeams(HashSet<Team> teams) {
-		// TODO Auto-generated method stub
-		
+		this.Teams = teams;	
 	}
 
 }

@@ -4,51 +4,61 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Team implements TeamInterface {
+	int score;
+	String TeamName;
+	HashSet<Student> Members;
+	Map<Student, Float> Ratings;
+	GradesDB db;
+	
+	public Team(){
+		Members = new HashSet<Student>();
+	}
+	
 	public Map<Student, Float> getRatings(){
-		return null;	
+		return this.Ratings;	
 	}
 	
 	public void setRatings(Map<Student, Float> ratings){
-		
+		this.Ratings = ratings;
 	}
 	
 	public Float getRatingForStudent(Student s){
-		return null;	
+		return this.Ratings.get(s);	
 	}
 	
 	public void setRatingForStudent(Student s, Float score){
-		
+		this.Ratings.put(s, score);
 	}
 	
 	public HashSet<Student> getMembers(){
-		return null;
+		return this.Members;
 	}
 	
 	public void setMembers(HashSet<Student> members){
-		
+		this.Members = members;
 	}
 	
 	public void addStudent(Student student){
-		
+		this.Members.add(student);
 	}
 	
 	public String getName(){
-		return null;
+		return this.TeamName;
 	}
 	
 	public void setName(String name){
-		
+		this.TeamName = name;
 	}
 	
 	public int getSize(){
-		return 0;	
+		return this.Members.size();	
 	}
 	
 	public int getTeamScore(){
-		return 0;	
+		return this.score;	
 	}
 	
 	public void setTeamScore(int teamScore){
-		
+		this.score = teamScore;
 	}
 }
