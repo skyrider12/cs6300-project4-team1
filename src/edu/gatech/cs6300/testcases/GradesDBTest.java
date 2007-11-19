@@ -8,6 +8,8 @@ import edu.gatech.cs6300.Constants;
 import edu.gatech.cs6300.GradesDB;
 import edu.gatech.cs6300.Session;
 import edu.gatech.cs6300.Student;
+import edu.gatech.cs6300.Assignment;
+import edu.gatech.cs6300.Project;
 
 public class GradesDBTest extends TestCase {
     private Session session = null;
@@ -110,7 +112,7 @@ public class GradesDBTest extends TestCase {
     }
 
     public void testGetProjects1() {
-        ArrayList<String> projects = null;
+        ArrayList<Project> projects = null;
         try {
             projects = db.getProjects();
         } catch (Exception e) {
@@ -120,14 +122,14 @@ public class GradesDBTest extends TestCase {
     }
     
     public void testGetProjects2() {
-        ArrayList<String> projects = null;
+        ArrayList<Project> projects = null;
         try {
             projects = db.getProjects();
         } catch (Exception e) {
             fail("Exception");
         }
         boolean found = false;
-        for (String p : projects) {
+        for (Project p : projects) {
             if ((p.equals("P1")) && (db.getAverageProjectGrade(p) == 93)) {
                 found = true;
                 break;
@@ -137,7 +139,7 @@ public class GradesDBTest extends TestCase {
     }
     
     public void testGetAssignments1() {
-        ArrayList<String> assignments = null;
+        ArrayList<Assignment> assignments = null;
         try {
             assignments = db.getAssignments();
         } catch (Exception e) {
@@ -147,14 +149,14 @@ public class GradesDBTest extends TestCase {
     }
     
     public void testGetAssignments2() {
-        ArrayList<String> assignments = null;
+        ArrayList<Assignment> assignments = null;
         try {
             assignments = db.getAssignments();
         } catch (Exception e) {
             fail("Exception");
         }
         boolean found = false;
-        for (String s : assignments) {
+        for (Assignment s : assignments) {
             if ((s.equals("Assignment 1")) && (db.getAverageAssignmentGrade("Assignment 1") == 99.29)) {
                 found = true;
                 break;
