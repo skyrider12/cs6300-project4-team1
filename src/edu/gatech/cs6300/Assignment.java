@@ -3,35 +3,33 @@ package edu.gatech.cs6300;
 import java.util.Map;
 
 public class Assignment implements AssignmentInterface{
+	String Description;
+	int number;
+	Map<Student, Integer> Scores;
+	GradesDB db;
 
 	public String getAssignmentDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Description;
 	}
 
 	public int getAssignmentNumber() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.number;
 	}
 
 	public Map<Student, Integer> getScores() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Scores;
 	}
 
 	public void setAssignmentDescription(String assignmentDescription) {
-		// TODO Auto-generated method stub
-		
+		this.Description = assignmentDescription;
 	}
 
 	public void setAssignmentNumber(int assignmentNumber) {
-		// TODO Auto-generated method stub
-		
+		this.number = assignmentNumber;
 	}
 
 	public void setScores(Map<Student, Integer> scores) {
-		// TODO Auto-generated method stub
-		
+		this.Scores = scores;
 	}
 
 }
