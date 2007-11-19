@@ -38,6 +38,10 @@ public class Team implements TeamInterface {
 		this.Members = members;
 	}
 	
+	public boolean isMember(Student student) {
+		return this.Members.contains(student);
+	}
+	
 	public void addStudent(Student student){
 		this.Members.add(student);
 	}

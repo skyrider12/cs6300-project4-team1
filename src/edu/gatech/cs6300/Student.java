@@ -1,20 +1,22 @@
 package edu.gatech.cs6300;
 
 import java.lang.StringBuilder;
+import java.util.HashSet;
+import java.util.Map;
 
 public class Student {
     private String name;
     private String gtid;
     private int attendance;
     private String email;
+    private Map<Integer, Team> teams;
+    private Map<Integer, Assignment> assignments;
     
     public Student() {
-
     	this.name = "";
     	this.gtid = "";
     	this.attendance = 0;
         this.email = "";
-
     }
 
     public String getName(){
@@ -57,7 +59,11 @@ public class Student {
     	return -1;
     }
     
-	public String getInfoForTextarea() {
+    public String getInfoForTextarea() {
+    	return getBasicInfoForTextarea();
+    }
+    
+	public String getBasicInfoForTextarea() {
 		StringBuilder info = new StringBuilder();
 		
 		/* append already-loaded info */
@@ -74,53 +80,6 @@ public class Student {
 		return info.toString();
 	}
 	
-	public String getProjectInfoForTextarea(GradesDB db) {
-		StringBuilder info = new StringBuilder();
-		
-//		System.out.println("Getting project info for " + this);
-		/* Get project info from DB */
-		int iNumProjects = db.getNumProjects();
-		for (int i=1; i <= iNumProjects; i++){
-			info.append("\nProject ");
-			info.append(i);
-			info.append(" team: ");
-			info.append(db.getTeamName(this, "P"+i));
-			info.append("\nProject ");
-			info.append(i);
-			info.append(" Average grade: ");
-			info.append(db.getAverageProjectGrade("P"+i));
-			info.append("\nProject ");
-			info.append(i);
-			info.append(" team grade: ");
-			info.append(db.getTeamGrade(db.getTeamName(this, "P"+i), "P"+i));
-			info.append("\nProject ");
-			info.append(i);
-			info.append(" Average contribution: ");
-			info.append(db.getContribution(this, "P"+i));
-		}
-		
-		return info.toString();
-	}
-	
-	public String getAssignmentInfoForTextarea(GradesDB db) {
-		StringBuilder info = new StringBuilder();
-		
-//		System.out.println("Getting assignment info for " + this);
-		int iNumAssignments = db.getNumAssignments();
-		for (int i=1; i <= iNumAssignments; i++) {
-			info.append("\nAssignment ");
-			info.append(i);
-			info.append(" grade: ");
-			info.append(db.getStudentGrade("assignment "+i, this));
-			info.append("\nAssignment ");
-			info.append(i);
-			info.append(" Average grade: ");
-			info.append(db.getAverageAssignmentGrade("assignment "+i));
-		} 
-
-		return info.toString();
-	}
-
     public String toString() {
     	return this.name;
     }
