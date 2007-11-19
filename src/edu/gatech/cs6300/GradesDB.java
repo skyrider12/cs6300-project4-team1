@@ -393,7 +393,9 @@ public class GradesDB implements OverallGradeCalculator{
     	}
     	
         
-    	this.getRow(session.service, worksheet, sRowTitle)
+    	/* this.getRow(session.service, worksheet, sRowTitle) */
+    	
+    	return null;
     }
     
     public int getNum(ListFeed feed) {
