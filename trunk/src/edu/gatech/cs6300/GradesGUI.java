@@ -224,8 +224,7 @@ public class GradesGUI {
 					/* Get the selected student */
 					Student selectedStudent = (Student)cb.getSelectedItem();
 									
-					/* After get back basic, project, and assignment info *
-					 * set text area content */
+					/* After get back basic, project, and assignment info */
 					jTextArea.setText(selectedStudent.getInfoForTextarea());
 			        
 			        /* Enable save button (since diff student) */

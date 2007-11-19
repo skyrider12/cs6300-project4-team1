@@ -6,7 +6,8 @@ public class Project implements ProjectInterface{
 	HashSet<Team> Teams;
 	String Name;
 	String Description;
-	GradesDB db;
+	
+	private int iProjectNumber = -1;
 	
 	public Project(){
 		Teams = new HashSet<Team> ();
@@ -55,6 +56,49 @@ public class Project implements ProjectInterface{
 
 	public void setTeams(HashSet<Team> teams) {
 		this.Teams = teams;	
+	}
+	
+	public void setProjectNumber(int iPrjNum) {
+		this.iProjectNumber = iPrjNum;
+	}
+	
+	public int getProjectNumber() {
+		return this.iProjectNumber;
+	}
+	
+	public Team getStudentTeam(Student student) {
+		Team studentTeam = null;
+		for (Team t : this.Teams) {
+			if (t.isMember(student)) {
+				studentTeam = t;
+			}
+		}
+		return studentTeam;
+	}
+	
+	public String getInfoForTextarea(Student student) {
+		StringBuilder info = new StringBuilder();
+		
+		Team studentTeam = getStudentTeam(student);
+		
+		info.append("\nProject ");
+		info.append(this.getProjectNumber());
+		info.append(" team: ");
+		info.append(studentTeam.getName());
+		info.append("\nProject ");
+		info.append(this.getProjectNumber());
+		info.append(" Average grade: ");
+		info.append(this.getAverageScore());
+		info.append("\nProject ");
+		info.append(this.getProjectNumber());
+		info.append(" team grade: ");
+		info.append(studentTeam.getTeamScore());
+		info.append("\nProject ");
+		info.append(this.getProjectNumber());
+		info.append(" Average contribution: ");
+		info.append(studentTeam.getRatingForStudent(student));
+		
+		return info.toString();
 	}
 
 }
