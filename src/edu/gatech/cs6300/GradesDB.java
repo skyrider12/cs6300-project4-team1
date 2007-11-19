@@ -128,8 +128,9 @@ public class GradesDB implements OverallGradeCalculator{
         ArrayList<String> descriptionColumn = getColumn(session.service, worksheet, "description");       
         
         /* Create a new Project instance for each row found, using col info to set proj */
-        for (int i=0; i < projectsColumn.size(); i++){
+        for (int i=0; i < projectsColumn.size(); i++) {
         	p = new Project();
+        	p.setProjectNumber(Integer.parseInt(projectsColumn.get(i).replaceFirst("P", "")));
         	p.setProjectName(projectsColumn.get(i));
         	p.setProjectDescription(descriptionColumn.get(i));
         	//p.
@@ -147,12 +148,12 @@ public class GradesDB implements OverallGradeCalculator{
     	Assignment a = null;
     	        
         /* Get two columns from "Data" worksheet */
-        ArrayList<String> assignmentsColumn = getColumn(session.service, wsData, "assignments");
-        ArrayList<String> descriptionColumn = getColumn(session.service, wsData, "description");
+        ArrayList<String> assignmentsColumn = getColumn(session.service, this.getDataWorksheet(), "assignments");
+        ArrayList<String> descriptionColumn = getColumn(session.service, this.getDataWorksheet(), "description");
         
         for (int i=0; i < assignmentsColumn.size(); i++){
         	a = new Assignment();
-        	a.setAssignmentNumber(Integer.parseInt(assignmentsColumn.get(i).replaceFirst("assignment ", "")));
+        	a.setAssignmentNumber(Integer.parseInt(assignmentsColumn.get(i).replaceFirst("Assignment ", "")));
         	a.setAssignmentDescription(descriptionColumn.get(i));
         	//a.Scores
         	assignments.add(a);
@@ -165,8 +166,7 @@ public class GradesDB implements OverallGradeCalculator{
         String newAssignment = assignmentp.toLowerCase().replaceAll(" ", "");  
         //String newAssignment = assignmentp;
         
-        WorksheetEntry wsGrades = this.getGradesWorksheet(); 
-        ArrayList<String> gradesColumn = getColumn(session.service, wsGrades, newAssignment);
+        ArrayList<String> gradesColumn = getColumn(session.service, this.getGradesWorksheet(), newAssignment);
         
         double sum = 0;
         for (String strGrade : gradesColumn) {
@@ -393,8 +393,8 @@ public class GradesDB implements OverallGradeCalculator{
     }
     
     public ListFeed getFeed(SpreadsheetService service, WorksheetEntry worksheet){
-        if(worksheet==null ) {System.err.println("worksheet null in getFeed, Rerun the program - exiting");System.exit(1);}
-        if(service==null ) {System.err.println("service null in getFeed, Rerun the program - exiting");System.exit(1);}        
+        if(worksheet==null ) {System.err.println("worksheet null in getFeed, Rerun the program - exiting");}
+        if(service==null ) {System.err.println("service null in getFeed, Rerun the program - exiting");}        
     	URL listFeedUrl = worksheet.getListFeedUrl();
 
         ListFeed feed = null;
@@ -412,8 +412,8 @@ public class GradesDB implements OverallGradeCalculator{
         
         String columnTitle = sColumnTitle.toLowerCase().replaceAll(" ", "");
         ArrayList<String> columns = new ArrayList<String>();
-        if(worksheet==null ) {System.err.println("worksheet null in getColumn, Rerun the program - exiting");System.exit(1);}
-        if(service==null ) {System.err.println("service null in getColumn, Rerun the program - exiting");System.exit(1);}
+        if(worksheet==null ) {System.err.println("worksheet null in getColumn, Rerun the program - exiting");}
+        if(service==null ) {System.err.println("service null in getColumn, Rerun the program - exiting");}
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed feed = null;
 
