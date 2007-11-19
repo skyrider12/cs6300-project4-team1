@@ -38,7 +38,7 @@ public class GradesDBTest extends TestCase {
 
     public void testGetNumAssignments() {
         try {
-            int numAssignments = db.getNumAssignments();
+            int numAssignments = db.getAssignments().size();
             assertEquals(3, numAssignments);
         } catch (Exception e) {
             fail("Exception");
@@ -48,7 +48,7 @@ public class GradesDBTest extends TestCase {
     public void testGetNumProjects() {
         int numProjects;
         try {
-            numProjects = db.getNumProjects();
+            numProjects = db.getProjects().size();
             assertEquals(3, numProjects);
         } catch (Exception e) {
             fail("Exception");
