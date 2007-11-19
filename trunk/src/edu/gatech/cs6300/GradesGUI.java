@@ -27,24 +27,14 @@ public class GradesGUI {
 	private static JTextArea jTextArea;
 	private static JButton jButton;
 	private ArrayList<Student> studentList;
-	
-	GradesDB db;
-	
-	public GradesGUI(GradesDB gDB){
-		this.db = gDB;
+		
+	public GradesGUI(){
 		this.getJFrame();
 		if(this.studentList == null || this.studentList.size() == 0) {
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 			jButton.setEnabled(false);
 			jTextArea.setEnabled(false);
 			studentList= new ArrayList<Student>();
-		}
-		
-		/* When startup GUI, populate combo box */
-		if(jComboBox.getItemCount() == 0) {
-			this.populateComboStudents(gDB.getStudents());
-		} else {
-			jComboBox.setSelectedIndex(0);
 		}
 		
 		jFrame.setVisible(true);
@@ -55,9 +45,7 @@ public class GradesGUI {
 	 * Given a HashSet<Students> fill in combobox appropriately
 	 * Only fill with students names -- will lazy-load info when selected
 	 */
-	public void populateComboStudents(HashSet<Student> students) {
-//		System.out.println("\nLoading Combobox");
-		
+	public void populateComboStudents(HashSet<Student> students) {	
 		for (Student student : students){
 			jComboBox.addItem(student);
 		}
@@ -235,20 +223,10 @@ public class GradesGUI {
 			        
 					/* Get the selected student */
 					Student selectedStudent = (Student)cb.getSelectedItem();
-	        		
-					/* Get student's basic info for display */
-					String sBasicInfo = selectedStudent.getBasicInfoForTextarea(db);
-					
-					/* Fill the textarea with the selected student's info and "Loading..." */
-			        jTextArea.setText(sBasicInfo + "\n\nLoading...\n");
-					
-			        /* Get student's project and assignment info for display */
-			        /* This takes a long time ... */
-					String sProjectInfo = selectedStudent.getProjectInfoForTextarea(db);
-					String sAssignmentInfo = selectedStudent.getAssignmentInfoForTextarea(db);
-					
-					/* After get back project and assignment info, reset text area content */
-					jTextArea.setText(sBasicInfo + sProjectInfo + sAssignmentInfo);
+									
+					/* After get back basic, project, and assignment info *
+					 * set text area content */
+					jTextArea.setText(selectedStudent.getInfoForTextarea());
 			        
 			        /* Enable save button (since diff student) */
 			        /* Should this ever really be disabled?? */
@@ -320,17 +298,6 @@ public class GradesGUI {
 			});
 		}
 		return jButton;
-	}
-	
-	public static void main (String[] args){
-//		System.out.println("Start");
-		Session session = new Session();
-		session.login(Constants.USERNAME, Constants.PASSWORD);
-		GradesDB gradesDB = new GradesDB(session);	
-		GradesGUI GGUI = new GradesGUI(gradesDB);
-		//System.out.println("Number of Students: "+GGUI.getNumStudentsInComboBox());
-		
-//		System.out.println("\nEnd");
 	}
 	
 //	/**

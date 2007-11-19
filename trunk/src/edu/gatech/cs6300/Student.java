@@ -57,7 +57,7 @@ public class Student {
     	return -1;
     }
     
-	public String getBasicInfoForTextarea(GradesDB db) {
+	public String getInfoForTextarea() {
 		StringBuilder info = new StringBuilder();
 		
 		/* append already-loaded info */
