@@ -25,7 +25,7 @@ public class GradesGUITest extends TestCase {
         db = session.getDBByName(Constants.GRADES_DB);
         
         /* create instance of our GUI */
-        gradesGUI = new GradesGUI(db);
+        gradesGUI = new GradesGUI();
         
         super.setUp();
     }

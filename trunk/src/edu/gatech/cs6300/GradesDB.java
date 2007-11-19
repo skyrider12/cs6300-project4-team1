@@ -18,8 +18,12 @@ public class GradesDB implements OverallGradeCalculator{
     Map<Student, Double> grade;
     String Formula;
     formulae Form = new formulae();
-    ArrayList<Project> projects;
-    ArrayList<Assignment> assignments;
+    
+    /* Cached worksheets */
+    private static WorksheetEntry wsData = null;
+    private static WorksheetEntry wsDetails = null;
+    private static WorksheetEntry wsAttendance = null;
+    private static WorksheetEntry wsGrades = null;
     
     private class formulae {
     	double AS; /*average grade in the assignments*/
@@ -34,36 +38,27 @@ public class GradesDB implements OverallGradeCalculator{
         List sheets = getSpreadsheets(session.service);
         if(sheets==null) {System.err.println("sheets=null, exiting"); System.exit(1);}
         spreadsheet = getSpreadsheet(sheets, Constants.GRADES_DB);
-        projects = new ArrayList<Project>();
-        assignments = new ArrayList<Assignment>();
     }
     
     public int getNumStudents() {
-        
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Details");
+        WorksheetEntry wsDetails = this.getDetailsWorksheet();
     
-        ListFeed feed = getFeed(session.service, worksheet);
+        ListFeed feed = getFeed(session.service, wsDetails);
         int student_num = getNum(feed) ;
         return student_num;
     }
-    
-    public int getNumAssignments() {
-        
-        return getAssignments().size();
-    }
-    
-    public int getNumProjects() {
 
-        return getProjects().size();
-    }
-    
+    /**
+     * Creates HashSet of Students by connecting to google docs and parsing info
+     */
     public HashSet<Student> getStudents() { 
-        
         HashSet<Student> students = new HashSet<Student>();
         
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Details");
-        ListFeed feed = getFeed(session.service, worksheet);
+        WorksheetEntry wsDetails = this.getDetailsWorksheet();
+        WorksheetEntry wsAttendance = this.getAttendanceWorksheet();
         
+        /* Get basic info for each student */
+        ListFeed feed = getFeed(session.service, wsDetails);
         for (ListEntry entry : feed.getEntries()) {
             Student student = new Student();
             student.setName(entry.getCustomElements().getValue("name"));
@@ -72,9 +67,8 @@ public class GradesDB implements OverallGradeCalculator{
             students.add(student);
         }
         
-        WorksheetEntry attendanceworksheet = getWorksheet(spreadsheet, "Attendance");
-        ListFeed attendancefeed = getFeed(session.service, attendanceworksheet);
-        
+        /* Get attendance of each student */
+        ListFeed attendancefeed = getFeed(session.service, wsAttendance);
         for (ListEntry entry : attendancefeed.getEntries()) {   
             Student student = getStudentByName(entry.getCustomElements().getValue("studentname"), students);
             if (student != null) {
@@ -85,7 +79,6 @@ public class GradesDB implements OverallGradeCalculator{
                 }
                 student.setAttendance(Integer.parseInt(attendance));
             }
-          
         }
         
         return students;
@@ -120,51 +113,75 @@ public class GradesDB implements OverallGradeCalculator{
         return null;
     }
  
+    /**
+     * Creates ArrayList of Projects by connecting to google docs and parsing info
+     */
     public ArrayList<Project> getProjects() {
+    	ArrayList<Project> projects = new ArrayList<Project>();
+    	Project p = null;
+    	
+    	/* Connect to "Data" Worksheet */
         WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
-        Project p = new Project ();
-        for (int i=0; i<getColumn(session.service, worksheet, "projects").size(); i++){
-        	p.Name = getColumn(session.service, worksheet, "projects").get(i);
-        	p.Description = getColumn(session.service, worksheet, "description").get(i);
-        	//p.Teams
-        	this.projects.add(p);
+        
+        /* Get two columns from "Data" worksheet */
+        ArrayList<String> projectsColumn = getColumn(session.service, worksheet, "projects");
+        ArrayList<String> descriptionColumn = getColumn(session.service, worksheet, "description");       
+        
+        /* Create a new Project instance for each row found, using col info to set proj */
+        for (int i=0; i < projectsColumn.size(); i++){
+        	p = new Project();
+        	p.setProjectName(projectsColumn.get(i));
+        	p.setProjectDescription(descriptionColumn.get(i));
+        	//p.
+        	projects.add(p);
         }
-        return this.projects;
+        
+        return projects;
     }
 
+    /**
+     * Creates ArrayList of Assignments by connecting to google docs and parsing info
+     */
     public ArrayList<Assignment> getAssignments() {
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Data");
-        Assignment a = new Assignment ();
-        ArrayList<String> assignments = getColumn(session.service, worksheet, "assignments");
-        for (int i=0; i<getColumn(session.service, worksheet, "assignments").size(); i++){
-        	a.number = Integer.parseInt(getColumn(session.service, worksheet, "assignments").get(i).replaceFirst("assignment ", ""));
-        	a.Description = getColumn(session.service, worksheet, "description").get(i);
+    	ArrayList<Assignment> assignments = new ArrayList<Assignment>();
+    	Assignment a = null;
+    	        
+        /* Get two columns from "Data" worksheet */
+        ArrayList<String> assignmentsColumn = getColumn(session.service, wsData, "assignments");
+        ArrayList<String> descriptionColumn = getColumn(session.service, wsData, "description");
+        
+        for (int i=0; i < assignmentsColumn.size(); i++){
+        	a = new Assignment();
+        	a.setAssignmentNumber(Integer.parseInt(assignmentsColumn.get(i).replaceFirst("assignment ", "")));
+        	a.setAssignmentDescription(descriptionColumn.get(i));
         	//a.Scores
-        	this.assignments.add(a);
+        	assignments.add(a);
         }
-        return this.assignments;
+        return assignments;
     }
     
+    /** TODO: This should not belong in GradesDB, but we can use to refactor out */
     public double getAverageAssignmentGrade(String assignmentp) {
         String newAssignment = assignmentp.toLowerCase().replaceAll(" ", "");  
         //String newAssignment = assignmentp;
         
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, "Grades");
-        ArrayList<String> grades = getColumn(session.service, worksheet, newAssignment);
+        WorksheetEntry wsGrades = this.getGradesWorksheet(); 
+        ArrayList<String> gradesColumn = getColumn(session.service, wsGrades, newAssignment);
         
         double sum = 0;
-        for (String strGrade : grades) {
+        for (String strGrade : gradesColumn) {
             double grade = Double.parseDouble(strGrade);
             sum += grade;
         }
         
-        if (grades.size() <= 0) {
+        if (gradesColumn.size() <= 0) {
             return 0;
         }
         
-        return Double.parseDouble(formatter.format(sum/grades.size()));
+        return Double.parseDouble(formatter.format(sum/gradesColumn.size()));
     }
     
+    /** TODO: This should not belong in GradesDB, but we can use to refactor out */
     public double getStudentGrade(String assignmentp, Student student) {
         
         String newAssignment = assignmentp.toLowerCase().replaceAll(" ", ""); 
@@ -187,7 +204,36 @@ public class GradesDB implements OverallGradeCalculator{
         return Double.parseDouble(formatter.format(grade));
     }
     
-
+    /**
+     * Find worksheet (e.g., "P4 Teams") and load teams & members
+     */
+    public HashSet<Team> getTeamsForProject(int iProjNumber) {
+    	 WorksheetEntry worksheet = getWorksheet(spreadsheet, "P" + iProjNumber + " Teams");
+    	 ListFeed feed = getFeed(session.service, worksheet);
+    	 
+    	 /* The HashSet of Teams to return */
+    	 HashSet<Team> teams = new HashSet<Team>();
+    	 Team team = null;
+    	 
+    	 /* Go through each row returned */
+    	 for (ListEntry entry : feed.getEntries()) {
+    		 team = new Team();
+    		 
+    		 /* Set the team name */
+    		 team.setName(entry.getCustomElements().getValue("teamname"));
+    		 
+    		 /* Get the names of its 4-5 members across the row */
+    		 /* List<String> MemberNames = */
+    		 
+    		 /* Convert those members into Students ?? */
+    		  
+    		 teams.add(team);
+    	 }
+    	 
+    	 return teams;
+    }
+    
+    /** TODO: This should not belong in GradesDB, but we can use to refactor out */    
     public String getTeamName(Student student, String project) {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Teams");
         if(worksheet==null ) {System.err.println("worksheet null in getTeamName,Rerun the program - exiting");System.exit(1);}
@@ -295,6 +341,34 @@ public class GradesDB implements OverallGradeCalculator{
         return null;
     }
     
+    public WorksheetEntry getDataWorksheet() {
+    	if (wsData == null) {
+    		wsData = getWorksheet(this.spreadsheet, "Data");
+    	}
+    	return wsData;
+    }
+    
+    public WorksheetEntry getDetailsWorksheet() {
+    	if (wsDetails == null) {
+    		wsDetails = getWorksheet(spreadsheet, "Details");
+    	}
+    	return wsDetails;
+    }
+    
+    public WorksheetEntry getAttendanceWorksheet() {
+    	if (wsAttendance == null) {
+    		wsAttendance = getWorksheet(spreadsheet, "Attendance");
+    	}
+    	return wsAttendance;
+    }
+    
+    public WorksheetEntry getGradesWorksheet() {
+    	if (wsGrades == null) {
+    		wsGrades = getWorksheet(spreadsheet, "Grades");
+    	}
+    	return wsGrades;
+    }
+    
     public WorksheetEntry getWorksheet(SpreadsheetEntry ss, String sWorksheetName) {
         WorksheetEntry worksheet = null;
         List worksheets = null;
@@ -386,12 +460,12 @@ public class GradesDB implements OverallGradeCalculator{
 
     public HashSet<Student> getMember() {
     	String worksheetName;
-    	
+    	/*
     	for (int i=0; i<this.getNumProjects(); i++){
     		worksheetName = "P"+i+" Teams";
     		WorksheetEntry worksheet = getWorksheet(spreadsheet, "P1 Teams");
     	}
-    	
+    	*/
         
     	/* this.getRow(session.service, worksheet, sRowTitle) */
     	

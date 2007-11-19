@@ -220,12 +220,13 @@ public class GradesGUI {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 //					System.out.println("actionPerformed()");
 					JComboBox cb = (JComboBox)e.getSource();
-			        
-					/* Get the selected student */
+
 					Student selectedStudent = (Student)cb.getSelectedItem();
-									
-					/* After get back basic, project, and assignment info */
-					jTextArea.setText(selectedStudent.getInfoForTextarea());
+					
+					String sInfo = selectedStudent.getBasicInfoForTextarea();
+					
+					/* Using Student, display basic, project, and assignment info */
+					jTextArea.setText(sInfo);
 			        
 			        /* Enable save button (since diff student) */
 			        /* Should this ever really be disabled?? */
@@ -298,13 +299,4 @@ public class GradesGUI {
 		}
 		return jButton;
 	}
-	
-//	/**
-//	 * The current Student information should be saved
-//	 * to a specified file.
-//	 */
-//	public void testOnSaveButtonClicked() {
-//		
-//	}
-
 }
