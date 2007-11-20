@@ -239,23 +239,25 @@ public class GradesDB implements OverallGradeCalculator{
     		 
     		 /* Get the names of its 4-5 members across the row */
     		 HashSet<Student> members = new HashSet<Student>();
-    		 ListFeed rowFeed = this.getRow(session.service, worksheet, team.getName());
+    		 Map<String, String> rowFeed = this.getRow(session.service, worksheet, team.getName());
     		 int i = 1;
-    		 for (ListEntry rowEntry : rowFeed.getEntries()) {
-    			 String studentName = rowEntry.getCustomElements().getValue("student" + i);
+    		 for (String rowEntry : rowFeed.keySet()) {
+    			 //String studentName = rowEntry.getCustomElements().getValue("student" + i);
+    			 String studentName = rowFeed.get("student" + i);
     			 
-    			 
-    			 Student student = studentMap.get(studentName);
-    			 
-    			 /* set team to students list of teams */
-    			 student.addTeam(iProjNumber, team);
-    			 
-    			 /* add student to team members list */
-    			 members.add(student);
-    			 
-    			 //set contribution
-    			 team.setRatingForStudent(student, allContributions.get(studentName));
-    			 i++;
+    			 if (studentName != null) {
+	    			 Student student = studentMap.get(studentName);
+	    			 
+	    			 /* set team to students list of teams */
+	    			 student.addTeam(iProjNumber, team);
+	    			 
+	    			 /* add student to team members list */
+	    			 members.add(student);
+	    			 
+	    			 //set contribution
+	    			 team.setRatingForStudent(student, allContributions.get(studentName));
+	    			 i++;
+    			 }
     		 }
     		 team.setMembers(members);
     		 
@@ -520,10 +522,12 @@ public class GradesDB implements OverallGradeCalculator{
         return columns;
     }
     
-    public ListFeed getRow(SpreadsheetService service, WorksheetEntry worksheet, String sRowTitle) {
+    public Map<String, String> getRow(SpreadsheetService service, WorksheetEntry worksheet, String sRowTitle) {
     	URL listFeedUrl = worksheet.getListFeedUrl();
     	ListFeed feed = null;
 
+    	Map<String, String> rowList = new HashMap<String, String>();
+    	
     	try {
     		feed = service.getFeed(listFeedUrl, ListFeed.class);    
     	} catch (Exception e) {
@@ -534,11 +538,12 @@ public class GradesDB implements OverallGradeCalculator{
     		for (ListEntry Lentry : feed.getEntries()) {
     			if (Lentry.getTitle().getPlainText().equals(sRowTitle)){
     				for (String tag : Lentry.getCustomElements().getTags()) {
+    					rowList.put(tag, Lentry.getCustomElements().getValue(tag));
     				}
     			}
     		}
     	}
-    	return feed;
+    	return rowList;
     }
 
     public HashSet<Student> getMember() {
