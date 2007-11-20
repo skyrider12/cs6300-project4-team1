@@ -84,8 +84,6 @@ public class GradesDB implements OverallGradeCalculator{
                     attendance = attendance.substring(0, attendance.indexOf("."));
                 }
                 student.setAttendance(Integer.parseInt(attendance));
-                System.out.println(student.getName());
-                System.out.println(student.getAttendance());
             }
         }
         
@@ -97,16 +95,6 @@ public class GradesDB implements OverallGradeCalculator{
         //return getStudentByName(sName, getStudents());
     	return studentMap.get(sName);
     }
-    
-//    public Student getStudentByName(String sName, HashSet<Student> students) {
-//        
-//        for (Student student : students) {
-//            if (student.getName().equals(sName)) {
-//                return student;
-//            }
-//        }
-//        return null;
-//    }
     
     public Student getStudentByID(String sGTID) {
         return getStudentByID(sGTID, getStudents());
@@ -366,37 +354,8 @@ public class GradesDB implements OverallGradeCalculator{
     	
     	 return teamGrades;
     }
-//    public double getTeamGrade(String teamName, String project) {
-//        
-//        //String realTeamName = teamName.toLowerCase().replaceAll(" ", "");
-//        
-//        ArrayList<String> column = getColumn(session.service, worksheet, teamName);
-//        
-//        return Double.parseDouble(formatter.format(Double.parseDouble((String) column.toArray()[column.size() - 1])));
-//    }
     
-    public int getAverageProjectGrade(String project) {
-//        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
-//        ListFeed feed = getFeed(session.service, worksheet);
-//        
-//        List<ListEntry> entries = feed.getEntries();
-//        ListEntry entry = entries.get(entries.size() - 1);
-//        
-//        double sum = 0;
-//        int count = 0;
-//        for (String tag : entry.getCustomElements().getTags()) {
-//            //System.out.println("Tag in avgProject: " + tag);
-//            if (!tag.equals("criteria") && !tag.equals("maxpoints")) {
-//               sum += Double.parseDouble(entry.getCustomElements().getValue(tag));
-//               count++;
-//            }
-//        }
-//  
-//        if (count == 0) {
-//            return 0;
-//        }
-//        return Double.parseDouble(formatter.format(sum/count));
-    	
+    public int getAverageProjectGrade(String project) {    	
     	Map<String, Integer> grades = getTeamGrades(Integer.parseInt(project.replace("P", "")));
     	int sum = 0; 
     	for (Integer val : grades.values()) {
@@ -527,10 +486,9 @@ public class GradesDB implements OverallGradeCalculator{
                      
             for (ListEntry entry : feed.getEntries()) {
                 columns.add(entry.getCustomElements().getValue(columnTitle));
+//                System.out.println(entry.getCategories());
 //                for (String tag : entry.getCustomElements().getTags()) {
-//                    if (tag.equals(columnTitle)){
-//                        columns.add(entry.getCustomElements().getValue(tag));
-//                    }
+//                	System.out.println(entry.getCustomElements().getValue(tag));
 //                }
             }
         }      

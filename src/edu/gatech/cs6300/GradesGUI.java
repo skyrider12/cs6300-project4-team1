@@ -222,7 +222,7 @@ public class GradesGUI {
 						sInfo += "\nProject " + i + ": ";
 						Team team = studentTeams.get(i);
 						sInfo += team.getTeamScore();
-						sInfo += "\t" + team.project.getProjectDescription();
+						sInfo += ";\t" + team.project.getProjectDescription();
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
@@ -230,8 +230,8 @@ public class GradesGUI {
 					for (int j=1; j<= assignments.keySet().size(); j++){
 						sInfo += "\nAssignment " + j + ":";
 						Assignment assignment = assignments.get(j);
-						sInfo += "\t" + assignment.getScoreForStudent(selectedStudent) + "\n";
-						sInfo += "\t" + assignment.getAssignmentDescription();
+						sInfo += "\t" + assignment.getScoreForStudent(selectedStudent);
+						sInfo += ";  " + assignment.getAssignmentDescription();
 					}
 					
 					/* Using Student, display basic, project, and assignment info */
