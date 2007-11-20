@@ -1,59 +1,27 @@
 package edu.gatech.cs6300.testcases;
 
-
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import edu.gatech.cs6300.Constants;
-import edu.gatech.cs6300.GradesDB;
+import edu.gatech.cs6300.GradesDBApp;
 import edu.gatech.cs6300.GradesGUI;
 import edu.gatech.cs6300.Project;
-import edu.gatech.cs6300.Session;
 import edu.gatech.cs6300.Student;
 import edu.gatech.cs6300.Team;
+import edu.gatech.cs6300.Assignment;
 
 import junit.framework.TestCase;
 
 public class GradesGUITest extends TestCase {
 
-    private Session session = null;
-    private GradesDB db = null;
-    private GradesGUI gradesGUI = null;
+	private static GradesDBApp gradesDBApp = null;
+    private static GradesGUI gradesGUI = null;
     
     protected void setUp() throws Exception {
-        session = new Session();
-        
-        /* log into google docs with constant username/password */
-        session.login(Constants.USERNAME, Constants.PASSWORD);
-        
-        /* log into our GradesDB */
-        db = session.getDBByName(Constants.GRADES_DB);
-        
-        /* create instance of our GUI */
-        gradesGUI = new GradesGUI();
-        
-		/* Get all projects from GradesDB */
-		ArrayList<Project> projects = db.getProjects();
-		
-		/* For each project, look in respective worksheet...*/		
-		for(Project p : projects) {
-			/* find teams (e.g., worksheet "P4 Teams") and members */
-			HashSet<Team> teams = db.getTeamsForProject(p.getProjectNumber());
-			for (Team t : teams){
-				t.setProject(p);
-			}
-			p.setTeams(teams);	
-		}
-		
-		/* Get all Assignments from GradesDB */
-		db.getAssignments();
-		
+    	gradesDBApp = new GradesDBApp();
+    	gradesGUI = gradesDBApp.getGradesGUI();		
 		
         super.setUp();
     }
 
     protected void tearDown() throws Exception {
-        session.logout();
         super.tearDown();
     }
     
@@ -67,7 +35,7 @@ public class GradesGUITest extends TestCase {
 //        	System.out.println(gradesGUI.getNumStudentsInComboBox());
             
         	/* check to make sure there are correct number of students */
-            assertEquals(db.getNumStudents(), gradesGUI.getNumStudentsInComboBox());           
+            assertEquals(gradesDBApp.getStudents().size(), gradesGUI.getNumStudentsInComboBox());           
         } catch (Exception e) {
             fail("Exception while populating combo students");
         }       
@@ -127,33 +95,36 @@ public class GradesGUITest extends TestCase {
      * and that one of the projcts has right info for selected student
      */
     public void testOnComboIndexChangedProjectInfo() {
-        int iProjectNumber = 3;
+        int iProjectNumber = 2;
         
         /* Select a student */
         gradesGUI.setSelectedStudent(5);
                 
-        String projectName = "P" + iProjectNumber;
         /* Get currently selected student */
         Student selectedStudent = gradesGUI.getSelectedStudent();
+        
+        Team team = selectedStudent.getTeams().get(iProjectNumber);
+        Project project = team.getProject();
                 
         /* Test student's project info against labels */
         try {
             /* student’s team's grades */
-            //assertEquals(gradesGUI.getProjectTeamGradeLabel(iProjectNumber), db.getTeamGrade(db.getTeamName(selectedStudent, projectName), projectName));
+        	System.out.println("stu: " + selectedStudent.getName() + "; GUI: " + gradesGUI.getProjectTeamGradeLabel(iProjectNumber) + "; team: " + team.getTeamScore());
+            assertEquals(gradesGUI.getProjectTeamGradeLabel(iProjectNumber), team.getTeamScore());
         } catch (Exception e) {
-            fail("Exception while checking student's Team Grade Label");
+            fail("Exception while checking student's Team's Grade Label");
         }
         
         try {
             /* average grade across teams */
-            assertEquals(gradesGUI.getProjectAverageGradeLabel(iProjectNumber), db.getAverageProjectGrade(projectName));
+            assertEquals(gradesGUI.getProjectAverageGradeLabel(iProjectNumber), project.getAverageScore());
         } catch (Exception e) {
             fail("Exception while checking project's Average Team Grade Label");
         }
         
         try {
             /* average contribution received by the student from his/her team members */
-            assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), db.getContribution(selectedStudent, iProjectNumber));      
+            assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), team.getRatingForStudent(selectedStudent));      
         } catch (Exception e) {
             fail("Exception while checking student's Average Contribution Label");
         }
@@ -166,21 +137,23 @@ public class GradesGUITest extends TestCase {
      */
     public void testOnComboIndexChangedAssignmentInfo() {
         /* Select a student */
-        gradesGUI.setSelectedStudent(6);
-        
-        //Assignment assignment2 = db.getAssignmentByName("Assignment 2");
-                
+        gradesGUI.setSelectedStudent(7);
+                        
         /* Get currently selected student */
         Student selectedStudent = gradesGUI.getSelectedStudent();
         
+        /* Get assignment to check (2) */
+        Assignment assignment2 = selectedStudent.getAssignments().get(2);
+        
         try {
-            assertEquals(gradesGUI.getAssignmentAvgGradeLabel(2), db.getAverageAssignmentGrade("Assignment 2"));
+            assertEquals(gradesGUI.getAssignmentAvgGradeLabel(2), assignment2.getAverageScore());
         } catch (Exception e) {
             fail("Exception while checking assignment's Average Grade Label");
         }
         
         try {
-            assertEquals(gradesGUI.getStudentAssignmentGradeLabel(2), db.getStudentGrade("Assignment 2", selectedStudent));         
+        	System.out.println("stu: " + selectedStudent.getName() + "; GUI: " + gradesGUI.getStudentAssignmentGradeLabel(2) + "; stugr: " + assignment2.getScoreForStudent(selectedStudent));
+            assertEquals(gradesGUI.getStudentAssignmentGradeLabel(2), assignment2.getScoreForStudent(selectedStudent));         
         } catch (Exception e) {
             fail("Exception while checking student's Assignment Grade Label");
         }       

@@ -128,35 +128,46 @@ public class GradesGUI {
 		return iAttendance;		
 	}
 	
-	private double getGradeLabelValue(String sLabel) {
+	private int getGradeLabelValueInt(String sLabel) {
 		String sValue = getLabelValue(sLabel);
-		double dValue = 0;
+		int iValue = 0;
 		try {
-			dValue= Double.parseDouble(sValue);
+			iValue= Integer.parseInt(sValue);
 		} catch(Exception ex) {
-			System.err.println("Error parsing double of: " + sLabel + ", " + sValue);
+			System.err.println("Error parsing integer of: " + sLabel + ", " + sValue);
 		}
-		return dValue;
+		return iValue;
 	}
 	
-	public double getProjectTeamGradeLabel(int iProjectNumber) {
-		return getGradeLabelValue("Project " + iProjectNumber + " team grade: ");
+	private Float getGradeLabelValueFloat(String sLabel) {
+		String sValue = getLabelValue(sLabel);
+		Float fValue = null;
+		try {
+			fValue= Float.parseFloat(sValue);
+		} catch(Exception ex) {
+			System.err.println("Error parsing integer of: " + sLabel + ", " + sValue);
+		}
+		return fValue;
 	}
 	
-	public double getProjectContributionLabel(int iProjectNumber) {
-		return getGradeLabelValue("Project " + iProjectNumber + " Average contribution: ");
+	public int getProjectTeamGradeLabel(int iProjectNumber) {
+		return getGradeLabelValueInt("Project " + iProjectNumber + " team grade: ");
 	}
 	
-	public double getProjectAverageGradeLabel(int iProjectNumber) {
-		return getGradeLabelValue("Project " + iProjectNumber + " Average grade: ");
+	public Float getProjectContributionLabel(int iProjectNumber) {
+		return getGradeLabelValueFloat("Project " + iProjectNumber + " Average contribution: ");
 	}
 	
-	public double getAssignmentAvgGradeLabel(int iAssignmentNumber) {
-		return getGradeLabelValue("Assignment " + iAssignmentNumber + " Average grade: ");
+	public int getProjectAverageGradeLabel(int iProjectNumber) {
+		return getGradeLabelValueInt("Project " + iProjectNumber + " Average grade: ");
 	}
 	
-	public double getStudentAssignmentGradeLabel(int iAssignmentNumber) {
-		return getGradeLabelValue("Assignment " + iAssignmentNumber + " grade: ");
+	public int getAssignmentAvgGradeLabel(int iAssignmentNumber) {
+		return getGradeLabelValueInt("Assignment " + iAssignmentNumber + " Average grade: ");
+	}
+	
+	public int getStudentAssignmentGradeLabel(int iAssignmentNumber) {
+		return getGradeLabelValueInt("Assignment " + iAssignmentNumber + " grade: ");
 	}
 
 	/**
@@ -218,24 +229,14 @@ public class GradesGUI {
 					
 					Map<Integer, Team> studentTeams = selectedStudent.getTeams();
 
-					for (int i=1; i<=studentTeams.keySet().size(); i++){
-						sInfo += "\nProject " + i + ": ";
-						Team team = studentTeams.get(i);
-						sInfo += team.getTeamScore();
-						sInfo += "\t" +"class Avg: "+team.project.getAverageScore()+"\n";
-						sInfo += "\t" +team.project.getProjectDescription()+"\n";						
-						sInfo += "\t" +"Avg contribution: "+team.getRatingForStudent(selectedStudent);
+					for (int i=1; i<=studentTeams.keySet().size(); i++) {
+						sInfo += studentTeams.get(i).project.getInfoForTextarea(selectedStudent);
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
 					
 					for (int j=1; j<= assignments.keySet().size(); j++){
-						sInfo += "\nAssignment " + j + ":";
-						Assignment assignment = assignments.get(j);
-						sInfo += "\t" + assignment.getScoreForStudent(selectedStudent);
-						sInfo += "     class Avg: "+ assignment.getAverageScore()+"\n";
-						sInfo += "\t" +assignment.getAssignmentDescription();
-						
+						sInfo += assignments.get(j).getInfoForTextarea(selectedStudent);						
 					}
 					
 					/* Using Student, display basic, project, and assignment info */

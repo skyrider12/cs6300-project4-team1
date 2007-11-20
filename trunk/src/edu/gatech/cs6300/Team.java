@@ -72,5 +72,9 @@ public class Team implements TeamInterface {
 	public void setProject(Project p) {
 		this.project = p;
 	}
+	
+	public Project getProject() {
+		return this.project;
+	}
 
 }

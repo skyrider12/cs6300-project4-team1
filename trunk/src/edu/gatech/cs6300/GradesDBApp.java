@@ -4,25 +4,27 @@ import java.util.HashSet;
 import java.util.ArrayList;
 
 public class GradesDBApp {
-
-	private static GradesGUI gradesGUI;
 	
-	public static HashSet<Student> students = null;
-	public static ArrayList<Team> teams = null;
-	public static ArrayList<Project> projects = null;
-	public static ArrayList<Assignment> assignments = null;
+	private GradesGUI gradesGUI;
+	private HashSet<Student> students = null;
+	private ArrayList<Project> projects = null;
+	private ArrayList<Assignment> assignments = null;
 	
 	public static void main (String[] args){
+		GradesDBApp gradesDBApp = new GradesDBApp();
+	}
+	
+	public GradesDBApp() {		
 		Session session = new Session();
 		session.login(Constants.USERNAME, Constants.PASSWORD);
 		
 		GradesDB gradesDB = new GradesDB(session);
 		
 		/* Get students from google docs through GradesDB */
-		students = gradesDB.getStudents();
+		this.students = gradesDB.getStudents();
 
 		/* Get all projects from GradesDB */
-		projects = gradesDB.getProjects();
+		this.projects = gradesDB.getProjects();
 		
 		/* For each project, look in respective worksheet...*/		
 		for(Project p : projects) {
@@ -35,7 +37,7 @@ public class GradesDBApp {
 		}
 		
 		/* Get all Assignments from GradesDB */
-		assignments = gradesDB.getAssignments();
+		this.assignments = gradesDB.getAssignments();
 		
 		//gradesDB.g
 		
@@ -44,7 +46,22 @@ public class GradesDBApp {
 		
 		/* Fill combo-box on GUI with our students HashSet */
 		gradesGUI.populateComboStudents(students);
+	}
 	
+	public GradesGUI getGradesGUI() {
+		return this.gradesGUI;
+	}
+	
+	public ArrayList<Assignment> getAssignments() {
+		return this.assignments;
+	}
+	
+	public ArrayList<Project> getProjects() {
+		return this.projects;
+	}
+	
+	public HashSet<Student> getStudents() {
+		return this.students;
 	}
 		
 }
