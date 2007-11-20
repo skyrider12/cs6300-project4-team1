@@ -222,7 +222,9 @@ public class GradesGUI {
 						sInfo += "\nProject " + i + ": ";
 						Team team = studentTeams.get(i);
 						sInfo += team.getTeamScore();
-						sInfo += ";\t" + team.project.getProjectDescription();
+						sInfo += ";\t" + team.project.getProjectDescription()+"\n";
+						sInfo += "Avg: "+team.project.getAverageScore();
+						sInfo += "\tAvg contribution: "+team.getRatingForStudent(selectedStudent);
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
