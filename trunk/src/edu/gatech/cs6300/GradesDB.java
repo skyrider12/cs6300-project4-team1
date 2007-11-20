@@ -67,6 +67,7 @@ public class GradesDB implements OverallGradeCalculator{
             student.setName(entry.getCustomElements().getValue("name"));
             student.setGTID(entry.getCustomElements().getValue("gtid"));
             student.setEmail(entry.getCustomElements().getValue("email"));
+
             students.add(student);
             
             studentMap.put(student.getName(), student);
@@ -83,6 +84,8 @@ public class GradesDB implements OverallGradeCalculator{
                     attendance = attendance.substring(0, attendance.indexOf("."));
                 }
                 student.setAttendance(Integer.parseInt(attendance));
+                System.out.println(student.getName());
+                System.out.println(student.getAttendance());
             }
         }
         
@@ -329,7 +332,7 @@ public class GradesDB implements OverallGradeCalculator{
     	return contributions;
     }
     
-    public double getContribution(Student student, String project) {
+    public int getContribution(Student student, String project) {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Contri");
         ListFeed feed = getFeed(session.service, worksheet);
 
@@ -343,7 +346,7 @@ public class GradesDB implements OverallGradeCalculator{
           }
           
         }
-        return Double.parseDouble(formatter.format(val));
+        return (int)Double.parseDouble(formatter.format(val));
     }
     
  
