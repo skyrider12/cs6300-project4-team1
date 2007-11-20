@@ -10,6 +10,7 @@ import edu.gatech.cs6300.Session;
 import edu.gatech.cs6300.Student;
 import edu.gatech.cs6300.Assignment;
 import edu.gatech.cs6300.Project;
+import edu.gatech.cs6300.Team;
 
 public class GradesDBTest extends TestCase {
     private Session session = null;
@@ -19,6 +20,26 @@ public class GradesDBTest extends TestCase {
         session = new Session();
         session.login(Constants.USERNAME, Constants.PASSWORD);
         db = session.getDBByName(Constants.GRADES_DB);
+        
+		/* Get students from google docs through GradesDB */
+        db.getStudents();
+
+		/* Get all projects from GradesDB */
+		ArrayList<Project> projects = db.getProjects();
+		
+		/* For each project, look in respective worksheet...*/		
+		for(Project p : projects) {
+			/* find teams (e.g., worksheet "P4 Teams") and members */
+			HashSet<Team> teams = db.getTeamsForProject(p.getProjectNumber());
+			for (Team t : teams){
+				t.setProject(p);
+			}
+			p.setTeams(teams);	
+		}
+		
+		/* Get all Assignments from GradesDB */
+		db.getAssignments();
+		
         super.setUp();
     }
 
