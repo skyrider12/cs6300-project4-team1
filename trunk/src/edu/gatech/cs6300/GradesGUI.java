@@ -222,7 +222,7 @@ public class GradesGUI {
 						sInfo += "\nProject " + i + ": ";
 						Team team = studentTeams.get(i);
 						sInfo += team.getTeamScore();
-						sInfo += "\t" + team.project.Description;
+						sInfo += "\t" + team.project.getProjectDescription();
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
