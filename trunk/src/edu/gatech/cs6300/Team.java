@@ -7,13 +7,14 @@ import java.util.Map;
 public class Team implements TeamInterface {
 	int score;
 	String TeamName;
+	Project project;
 	HashSet<Student> Members;
 	Map<Student, Float> Ratings;
-	GradesDB db;
 	
 	public Team(){
 		Members = new HashSet<Student>();
 		Ratings = new HashMap<Student, Float>();
+		project = new Project();
 	}
 	
 	public Map<Student, Float> getRatings(){
