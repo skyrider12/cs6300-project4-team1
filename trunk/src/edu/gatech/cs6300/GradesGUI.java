@@ -227,19 +227,20 @@ public class GradesGUI {
 					String sInfo = selectedStudent.getBasicInfoForTextarea();
 					
 					Map<Integer, Team> studentTeams = selectedStudent.getTeams();
-					for (Integer projNum : studentTeams.keySet()) {
-						sInfo += "\nProject " + projNum.intValue() + ":";
-						Team team = studentTeams.get(projNum);
+
+					for (int i=1; i<=studentTeams.keySet().size(); i++){
+						sInfo += "\nProject " + i + ":";
+						Team team = studentTeams.get(i);
 						sInfo += "\t" + team.getTeamScore();
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
-					for (Integer aNum : assignments.keySet()) {
-						sInfo += "\nAssignment " + aNum.intValue() + ":";
-						Assignment assignment = assignments.get(aNum);
+					
+					for (int j=1; j<= assignments.keySet().size(); j++){
+						sInfo += "\nAssignment " + j + ":";
+						Assignment assignment = assignments.get(j);
 						sInfo += "\t" + assignment.getScoreForStudent(selectedStudent) + "\n";
 						sInfo += "\t" + assignment.getAssignmentDescription();
-						
 					}
 					
 					/* Using Student, display basic, project, and assignment info */
