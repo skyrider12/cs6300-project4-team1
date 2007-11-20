@@ -222,9 +222,9 @@ public class GradesGUI {
 						sInfo += "\nProject " + i + ": ";
 						Team team = studentTeams.get(i);
 						sInfo += team.getTeamScore();
-						sInfo += ";\t" + team.project.getProjectDescription()+"\n";
-						sInfo += "Avg: "+team.project.getAverageScore();
-						sInfo += "\tAvg contribution: "+team.getRatingForStudent(selectedStudent);
+						sInfo += "\t" +"class Avg: "+team.project.getAverageScore()+"\n";
+						sInfo += "\t" +team.project.getProjectDescription()+"\n";						
+						sInfo += "\t" +"Avg contribution: "+team.getRatingForStudent(selectedStudent);
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
@@ -233,7 +233,9 @@ public class GradesGUI {
 						sInfo += "\nAssignment " + j + ":";
 						Assignment assignment = assignments.get(j);
 						sInfo += "\t" + assignment.getScoreForStudent(selectedStudent);
-						sInfo += ";  " + assignment.getAssignmentDescription();
+						sInfo += "     class Avg: "+ assignment.getAverageScore()+"\n";
+						sInfo += "\t" +assignment.getAssignmentDescription();
+						
 					}
 					
 					/* Using Student, display basic, project, and assignment info */
