@@ -152,15 +152,27 @@ public class GradesDB implements OverallGradeCalculator{
     public ArrayList<Assignment> getAssignments() {
     	ArrayList<Assignment> assignments = new ArrayList<Assignment>();
     	Assignment a = null;
-    	        
+  	        
         /* Get two columns from "Data" worksheet */
         ArrayList<String> assignmentsColumn = getColumn(session.service, this.getDataWorksheet(), "assignments");
         ArrayList<String> descriptionColumn = getColumn(session.service, this.getDataWorksheet(), "description");
+        ArrayList<String> namesColumn = getColumn(session.service, this.getGradesWorksheet(), "name");
         
         for (int i=0; i < assignmentsColumn.size(); i++){
         	a = new Assignment();
         	a.setAssignmentNumber(Integer.parseInt(assignmentsColumn.get(i).replaceFirst("Assignment ", "")));
         	a.setAssignmentDescription(descriptionColumn.get(i));
+        	
+        	/* get all student grades for this assignment */
+        	Map<Student, Integer> studentGrades = new HashMap<Student, Integer>();
+        	ArrayList<String> gradesColumn = getColumn(session.service, this.getGradesWorksheet(), "assignment" + (i + 1));
+        	for (int j = 0; j < gradesColumn.size(); j++) {
+        		Student curStudent = studentMap.get(namesColumn.get(j));
+        		curStudent.addAssignment(i + 1, a);
+        		studentGrades.put(curStudent, new Integer(gradesColumn.get(j)));
+        	}
+        	
+        	a.setScores(studentGrades);
         	//a.Scores
         	assignments.add(a);
         }

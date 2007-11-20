@@ -93,7 +93,7 @@ public class Student {
 		assignments.put(new Integer(iAssignmentNum), assignment);
 	}
 	
-	public Map<Integer, Assignment> getAssignment() {
+	public Map<Integer, Assignment> getAssignments() {
 		return assignments;
 	}
 	
