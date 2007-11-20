@@ -151,7 +151,7 @@ public class GradesDBTest extends TestCase {
         }
         boolean found = false;
         for (Project p : projects) {
-            if ((p.equals("P1")) && (db.getAverageProjectGrade("P1") == 93)) {
+            if ((p.getProjectName().equals("P1")) && (db.getAverageProjectGrade("P1") == 93)) {
                 found = true;
                 break;
             }
@@ -178,7 +178,7 @@ public class GradesDBTest extends TestCase {
         }
         boolean found = false;
         for (Assignment s : assignments) {
-            if ((s.equals("Assignment 1")) && (db.getAverageAssignmentGrade("Assignment 1") == 99.29)) {
+            if ((s.getAssignmentNumber() == 1) && (db.getAverageAssignmentGrade("Assignment 1") == 99.29)) {
                 found = true;
                 break;
             }
@@ -203,9 +203,9 @@ public class GradesDBTest extends TestCase {
         Student student2 = db.getStudentByName("Shevon Wise");
         Student student3 = db.getStudentByName("Caileigh Raybould");
         
-        assertEquals(db.getContribution(student1, "P1"), 9.5);
-        assertEquals(db.getContribution(student2, "P1"), 9.25);
-        assertEquals(db.getContribution(student3, "P1"), 7.67);
+        assertEquals(db.getContribution(student1, 1), 9);
+        assertEquals(db.getContribution(student2, 1), 9);
+        assertEquals(db.getContribution(student3, 1), 7);
     }
     
     public void testGetTeamName() {
@@ -243,7 +243,7 @@ public class GradesDBTest extends TestCase {
     public void testGetAverageContribution() {
         Student student = db.getStudentByName("Sheree Gadow");
         
-        assertEquals(db.getContribution(student, "P1"), 7.00);
+        assertEquals(db.getContribution(student, 1), 7);
     }
     
 }
