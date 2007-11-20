@@ -27,66 +27,26 @@ public class GradesGUI {
 	private static JComboBox jComboBox;
 	private static JTextArea jTextArea;
 	private static JButton jButton;
-	//private ArrayList<Student> studentList;
-	
-	
-	public static HashSet<Student> students = null;
-	public static ArrayList<Team> teams = null;
-	public static ArrayList<Project> projects = null;
-	public static ArrayList<Assignment> assignments = null;
-	
+	private ArrayList<Student> studentList;
+		
 	public GradesGUI(){
 		this.getJFrame();
-		//if(this.studentList == null || this.studentList.size() == 0) {
+		if(this.studentList == null || this.studentList.size() == 0) {
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 			jButton.setEnabled(false);
 			jTextArea.setEnabled(false);
-			//studentList= new ArrayList<Student>();
-			
-			Session session = new Session();
-			session.login(Constants.USERNAME, Constants.PASSWORD);
-			//System.out.println("login successful");
-			GradesDB gradesDB = new GradesDB(session);
-			
-			if(jComboBox.getItemCount()==0)
-			{
-				/* Get students from google docs through GradesDB */
-				students = gradesDB.getStudents();
-
-				/* Get all projects from GradesDB */
-				projects = gradesDB.getProjects();
-				
-				/* For each project, look in respective worksheet...*/		
-				for(Project p : projects) {
-					/* find teams (e.g., worksheet "P4 Teams") and members */
-					HashSet<Team> teams = gradesDB.getTeamsForProject(p.getProjectNumber());
-					p.setTeams(teams);	
-				}
-				
-				/* Get all Assignments from GradesDB */
-				assignments = gradesDB.getAssignments();
-				
-
-				
-				/* Fill combo-box on GUI with our students HashSet */
-				populateComboStudents(students);				
-				
-			}
-//		}
-		
+			studentList= new ArrayList<Student>();
+		}		
 		jFrame.setVisible(true);
-	}
-	
+	}	
 	
 	/**
 	 * Given a HashSet<Students> fill in combobox appropriately
 	 * Only fill with students names -- will lazy-load info when selected
 	 */
-	public void populateComboStudents(HashSet<Student> students) {
-		System.out.println("called populate. ");
-		System.out.println(students.size());
+	public void populateComboStudents(HashSet<Student> students) {	
 		for (Student student : students){
-			jComboBox.addItem(student);
+			jComboBox.addItem(student);		
 		}
 	}
 		
@@ -102,7 +62,6 @@ public class GradesGUI {
 	 * Given an index, set the selected Student
 	 */
 	public void setSelectedStudent(int index) {
-//		System.out.println("setSelected: " + index); 
 		jComboBox.setSelectedIndex(index);
 	}
 	
@@ -139,16 +98,13 @@ public class GradesGUI {
 		int iLabelLength = sLabel.length();
 		
 		String text = jTextArea.getText();
-				System.out.println(text);
+				
 		if (text.length() > 0) {
 			int iLabelIndex = text.indexOf(sLabel);
 			if (iLabelIndex >= 0) {
 				sValue = text.substring(iLabelIndex + iLabelLength, text.indexOf("\n", iLabelIndex));
 			}
 		}
-		
-		// System.out.println("Got Label Value: " + sValue);
-		
 		return sValue;
 	}
 	
@@ -169,9 +125,6 @@ public class GradesGUI {
 				System.err.println(sAttendance);
 			}
 		}
-		
-		// System.out.println("Got Attendance Label: " + iAttendance);
-		
 		return iAttendance;		
 	}
 	
@@ -190,12 +143,12 @@ public class GradesGUI {
 		return getGradeLabelValue("Project " + iProjectNumber + " team grade: ");
 	}
 	
-	public int getProjectContributionLabel(int iProjectNumber) {
-		return (int)getGradeLabelValue("Project " + iProjectNumber + " Average contribution: ");
+	public double getProjectContributionLabel(int iProjectNumber) {
+		return getGradeLabelValue("Project " + iProjectNumber + " Average contribution: ");
 	}
 	
-	public int getProjectAverageGradeLabel(int iProjectNumber) {
-		return (int)getGradeLabelValue("Project " + iProjectNumber + " Average grade: ");
+	public double getProjectAverageGradeLabel(int iProjectNumber) {
+		return getGradeLabelValue("Project " + iProjectNumber + " Average grade: ");
 	}
 	
 	public double getAssignmentAvgGradeLabel(int iAssignmentNumber) {
@@ -250,14 +203,13 @@ public class GradesGUI {
 			jComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
 				public void propertyChange(java.beans.PropertyChangeEvent e) {
 					if ((e.getPropertyName().equals("enabled"))) {
-//						System.out.println("propertyChange(enabled)"); // TODO Auto-generated property Event stub "enabled" 
 					}
 				}
 			});
 
 			jComboBox.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-//					System.out.println("actionPerformed()");
+
 					JComboBox cb = (JComboBox)e.getSource();
 
 					Student selectedStudent = (Student)cb.getSelectedItem();
@@ -267,43 +219,19 @@ public class GradesGUI {
 					Map<Integer, Team> studentTeams = selectedStudent.getTeams();
 
 					for (int i=1; i<=studentTeams.keySet().size(); i++){
-						sInfo += "\nProject " + i + " team grade: ";
+						sInfo += "\nProject " + i + ": ";
 						Team team = studentTeams.get(i);
-						sInfo += "\t" + team.getTeamScore();
+						sInfo += team.getTeamScore();
+						sInfo += "\t" + team.project.Description;
 					}
 					
 					Map<Integer, Assignment> assignments = selectedStudent.getAssignments();
 					
 					for (int j=1; j<= assignments.keySet().size(); j++){
-						sInfo += "\nAssignment " + j + " grade: ";
+						sInfo += "\nAssignment " + j + ":";
 						Assignment assignment = assignments.get(j);
 						sInfo += "\t" + assignment.getScoreForStudent(selectedStudent) + "\n";
 						sInfo += "\t" + assignment.getAssignmentDescription();
-					}
-					int i=1;
-					sInfo+="\n";
-					for(Project p : projects) {
-						sInfo += "Project " + i + " Average grade: ";
-						
-						sInfo +=  p.getAverageScore() + "\n";
-						i++;
-					}
-					
-					for (int j=1; j<= assignments.keySet().size(); j++){
-						sInfo += "Assignment " + j + " Average grade: ";
-						Assignment assignment = assignments.get(j);
-						sInfo += assignment.getAverageScore()+ "\n";
-
-					}
-										
-					
-					for (i=1; i<=studentTeams.keySet().size(); i++){
-						sInfo += "Project " + i + " Average contribution: ";
-						Team team = studentTeams.get(i);
-						Map<Student, Float> ratingList =team.Ratings;
-						float rating = ratingList.get(selectedStudent);
-						
-						sInfo += rating+"\n"; 
 					}
 					
 					/* Using Student, display basic, project, and assignment info */
