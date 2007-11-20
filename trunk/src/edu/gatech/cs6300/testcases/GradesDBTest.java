@@ -130,7 +130,7 @@ public class GradesDBTest extends TestCase {
         }
         boolean found = false;
         for (Project p : projects) {
-            if ((p.equals("P1")) && (db.getAverageProjectGrade(p) == 93)) {
+            if ((p.equals("P1")) && (db.getAverageProjectGrade("P1") == 93)) {
                 found = true;
                 break;
             }
