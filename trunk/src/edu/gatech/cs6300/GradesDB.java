@@ -158,7 +158,7 @@ public class GradesDB implements OverallGradeCalculator{
   	        
         /* Get two columns from "Data" worksheet */
         ArrayList<String> assignmentsColumn = getColumn(session.service, this.getDataWorksheet(), "assignments");
-        ArrayList<String> descriptionColumn = getColumn(session.service, this.getDataWorksheet(), "description");
+        ArrayList<String> descriptionColumn = getColumn(session.service, this.getDataWorksheet(), "description_2");
         ArrayList<String> namesColumn = getColumn(session.service, this.getGradesWorksheet(), "name");
         
         for (int i=0; i < assignmentsColumn.size(); i++){
