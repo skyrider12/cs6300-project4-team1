@@ -2,6 +2,7 @@ package edu.gatech.cs6300;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -224,6 +225,13 @@ public class GradesGUI {
 					Student selectedStudent = (Student)cb.getSelectedItem();
 					
 					String sInfo = selectedStudent.getBasicInfoForTextarea();
+					
+					Map<Integer, Team> studentTeams = selectedStudent.getTeams();
+					for (Integer projNum : studentTeams.keySet()) {
+						sInfo += "\nProject " + projNum.intValue() + ":\n";
+						Team team = studentTeams.get(projNum);
+						sInfo += team.getTeamScore();
+					}
 					
 					/* Using Student, display basic, project, and assignment info */
 					jTextArea.setText(sInfo);

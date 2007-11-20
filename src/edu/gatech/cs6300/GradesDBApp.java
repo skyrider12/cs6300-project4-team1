@@ -20,13 +20,7 @@ public class GradesDBApp {
 		
 		/* Get students from google docs through GradesDB */
 		students = gradesDB.getStudents();
-		
-		/* Create the instance of GradesGUI */
-		gradesGUI = new GradesGUI();
-		
-		/* Fill combo-box on GUI with our students HashSet */
-		gradesGUI.populateComboStudents(students);
-		
+
 		/* Get all projects from GradesDB */
 		projects = gradesDB.getProjects();
 		
@@ -34,15 +28,19 @@ public class GradesDBApp {
 		for(Project p : projects) {
 			/* find teams (e.g., worksheet "P4 Teams") and members */
 			HashSet<Team> teams = gradesDB.getTeamsForProject(p.getProjectNumber());
-			p.setTeams(teams);
-			
-			/* find team grades (e.g., worksheet "P2 Grades") */
-			
-			/* find member contributions (e.g., worksheet "P1 Contri") */
+			p.setTeams(teams);	
 		}
 		
 		/* Get all Assignments from GradesDB */
 		assignments = gradesDB.getAssignments();
+		
+		//gradesDB.g
+		
+		/* Create the instance of GradesGUI */
+		gradesGUI = new GradesGUI();
+		
+		/* Fill combo-box on GUI with our students HashSet */
+		gradesGUI.populateComboStudents(students);
 	
 	}
 		

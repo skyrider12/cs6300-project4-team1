@@ -1,5 +1,6 @@
 package edu.gatech.cs6300;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public class Team implements TeamInterface {
 	
 	public Team(){
 		Members = new HashSet<Student>();
+		Ratings = new HashMap<Student, Float>();
 	}
 	
 	public Map<Student, Float> getRatings(){

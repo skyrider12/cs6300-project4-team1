@@ -3,6 +3,7 @@ package edu.gatech.cs6300;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class GradesDB implements OverallGradeCalculator{
     Map<Student, Double> grade;
     String Formula;
     formulae Form = new formulae();
+    
+    Map<String, Student> studentMap = new HashMap<String, Student>();
     
     /* Cached worksheets */
     private static WorksheetEntry wsData = null;
@@ -65,12 +68,14 @@ public class GradesDB implements OverallGradeCalculator{
             student.setGTID(entry.getCustomElements().getValue("gtid"));
             student.setEmail(entry.getCustomElements().getValue("email"));
             students.add(student);
+            
+            studentMap.put(student.getName(), student);
         }
         
         /* Get attendance of each student */
         ListFeed attendancefeed = getFeed(session.service, wsAttendance);
         for (ListEntry entry : attendancefeed.getEntries()) {   
-            Student student = getStudentByName(entry.getCustomElements().getValue("studentname"), students);
+            Student student = getStudentByName(entry.getCustomElements().getValue("studentname"));
             if (student != null) {
                 String attendance = entry.getCustomElements().getValue("total").replace("%", "");
                 
@@ -86,18 +91,19 @@ public class GradesDB implements OverallGradeCalculator{
     
     
     public Student getStudentByName(String sName) {
-        return getStudentByName(sName, getStudents());
+        //return getStudentByName(sName, getStudents());
+    	return studentMap.get(sName);
     }
     
-    public Student getStudentByName(String sName, HashSet<Student> students) {
-        
-        for (Student student : students) {
-            if (student.getName().equals(sName)) {
-                return student;
-            }
-        }
-        return null;
-    }
+//    public Student getStudentByName(String sName, HashSet<Student> students) {
+//        
+//        for (Student student : students) {
+//            if (student.getName().equals(sName)) {
+//                return student;
+//            }
+//        }
+//        return null;
+//    }
     
     public Student getStudentByID(String sGTID) {
         return getStudentByID(sGTID, getStudents());
@@ -211,6 +217,12 @@ public class GradesDB implements OverallGradeCalculator{
     	 WorksheetEntry worksheet = getWorksheet(spreadsheet, "P" + iProjNumber + " Teams");
     	 ListFeed feed = getFeed(session.service, worksheet);
     	 
+    	 /* Get all the team grades */
+    	 Map<String, Integer> teamGrades = getTeamGrades(iProjNumber);
+    	 
+    	 /* Get all the student contributions */
+    	 Map<String, Float> allContributions = getContibutions(iProjNumber);
+    	 
     	 /* The HashSet of Teams to return */
     	 HashSet<Team> teams = new HashSet<Team>();
     	 Team team = null;
@@ -219,14 +231,38 @@ public class GradesDB implements OverallGradeCalculator{
     	 for (ListEntry entry : feed.getEntries()) {
     		 team = new Team();
     		 
+    		 /* Map of contribution grades but only for this team */
+    		 //Map<String, Float> teamContributions = new HashMap<String, Float>();
+    		 
     		 /* Set the team name */
     		 team.setName(entry.getCustomElements().getValue("teamname"));
     		 
     		 /* Get the names of its 4-5 members across the row */
-    		 /* List<String> MemberNames = */
+    		 HashSet<Student> members = new HashSet<Student>();
+    		 ListFeed rowFeed = this.getRow(session.service, worksheet, team.getName());
+    		 int i = 1;
+    		 for (ListEntry rowEntry : rowFeed.getEntries()) {
+    			 String studentName = rowEntry.getCustomElements().getValue("student" + i);
+    			 
+    			 
+    			 Student student = studentMap.get(studentName);
+    			 
+    			 /* set team to students list of teams */
+    			 student.addTeam(iProjNumber, team);
+    			 
+    			 /* add student to team members list */
+    			 members.add(student);
+    			 
+    			 //set contribution
+    			 team.setRatingForStudent(student, allContributions.get(studentName));
+    			 i++;
+    		 }
+    		 team.setMembers(members);
     		 
-    		 /* Convert those members into Students ?? */
-    		  
+    		 /* Set the team score */
+    		 team.setTeamScore(teamGrades.get(team.getName().toLowerCase().replace(" ", "")).intValue());
+ 
+    		 /* Add to the final HashSet to be returned */
     		 teams.add(team);
     	 }
     	 
@@ -254,6 +290,31 @@ public class GradesDB implements OverallGradeCalculator{
         return "";
     }
     
+    
+    /**
+     * Get all the contributions for the given project number
+     * @param iProject
+     * @return Map<String,  Float>
+     */
+    public Map<String, Float> getContibutions(int iProject) {
+    	HashMap<String, Float> contributions = new HashMap<String, Float>();
+    	
+    	WorksheetEntry worksheet = getWorksheet(spreadsheet, "P" + iProject + " Contri");
+        ListFeed feed = getFeed(session.service, worksheet);
+        
+        /* Get all the students averages from the contributions worksheet and return it as a map */
+        for (ListEntry entry : feed.getEntries()) {
+            String studentName = entry.getCustomElements().getValue("students"); 
+            String strVal = entry.getCustomElements().getValue("average");
+            
+            if (studentName != null) {
+            	double val = Double.parseDouble(strVal);
+            	contributions.put(studentName, new Float(val)); 
+            }   
+        }     
+    	return contributions;
+    }
+    
     public double getContribution(Student student, String project) {
         WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Contri");
         ListFeed feed = getFeed(session.service, worksheet);
@@ -272,37 +333,59 @@ public class GradesDB implements OverallGradeCalculator{
     }
     
  
-    
-    public double getTeamGrade(String teamName, String project) {
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
-        //String realTeamName = teamName.toLowerCase().replaceAll(" ", "");
-        
-        ArrayList<String> column = getColumn(session.service, worksheet, teamName);
-        
-        return Double.parseDouble(formatter.format(Double.parseDouble((String) column.toArray()[column.size() - 1])));
-    }
-    
-    public double getAverageProjectGrade(String project) {
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
-        ListFeed feed = getFeed(session.service, worksheet);
-        
-        List<ListEntry> entries = feed.getEntries();
+    public Map<String, Integer> getTeamGrades(int projNumber) {
+    	HashMap<String, Integer> teamGrades = new HashMap<String, Integer>();
+ 
+    	WorksheetEntry worksheet = getWorksheet(spreadsheet, "P" + projNumber + " Grades");
+    	ListFeed feed = getFeed(session.service, worksheet);
+    	List<ListEntry> entries = feed.getEntries();
         ListEntry entry = entries.get(entries.size() - 1);
-        
-        double sum = 0;
-        int count = 0;
-        for (String tag : entry.getCustomElements().getTags()) {
-            //System.out.println("Tag in avgProject: " + tag);
-            if (!tag.equals("criteria") && !tag.equals("maxpoints")) {
-               sum += Double.parseDouble(entry.getCustomElements().getValue(tag));
-               count++;
-            }
-        }
-  
-        if (count == 0) {
-            return 0;
-        }
-        return Double.parseDouble(formatter.format(sum/count));
+    	
+    	 for (String tag : entry.getCustomElements().getTags()) {
+             if (!tag.equals("criteria") && !tag.equals("maxpoints")) {
+            	 teamGrades.put(tag, new Integer(entry.getCustomElements().getValue(tag)));
+             }       
+         }
+    	
+    	 return teamGrades;
+    }
+//    public double getTeamGrade(String teamName, String project) {
+//        
+//        //String realTeamName = teamName.toLowerCase().replaceAll(" ", "");
+//        
+//        ArrayList<String> column = getColumn(session.service, worksheet, teamName);
+//        
+//        return Double.parseDouble(formatter.format(Double.parseDouble((String) column.toArray()[column.size() - 1])));
+//    }
+    
+    public int getAverageProjectGrade(String project) {
+//        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Grades");
+//        ListFeed feed = getFeed(session.service, worksheet);
+//        
+//        List<ListEntry> entries = feed.getEntries();
+//        ListEntry entry = entries.get(entries.size() - 1);
+//        
+//        double sum = 0;
+//        int count = 0;
+//        for (String tag : entry.getCustomElements().getTags()) {
+//            //System.out.println("Tag in avgProject: " + tag);
+//            if (!tag.equals("criteria") && !tag.equals("maxpoints")) {
+//               sum += Double.parseDouble(entry.getCustomElements().getValue(tag));
+//               count++;
+//            }
+//        }
+//  
+//        if (count == 0) {
+//            return 0;
+//        }
+//        return Double.parseDouble(formatter.format(sum/count));
+    	
+    	Map<String, Integer> grades = getTeamGrades(Integer.parseInt(project.replace("P", "")));
+    	int sum = 0; 
+    	for (Integer val : grades.values()) {
+    		sum += val.intValue();
+    	}
+    	return sum/grades.size();
     }
     
     /* ************************************************************

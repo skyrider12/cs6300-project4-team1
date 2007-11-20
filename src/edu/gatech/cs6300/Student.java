@@ -1,6 +1,7 @@
 package edu.gatech.cs6300;
 
 import java.lang.StringBuilder;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -9,8 +10,8 @@ public class Student {
     private String gtid;
     private int attendance;
     private String email;
-    private Map<Integer, Team> teams;
-    private Map<Integer, Assignment> assignments;
+    private Map<Integer, Team> teams = new HashMap<Integer, Team>();
+    private Map<Integer, Assignment> assignments = new HashMap<Integer, Assignment>();
     
     public Student() {
     	this.name = "";
@@ -78,6 +79,22 @@ public class Student {
 		info.append("%");
 		
 		return info.toString();
+	}
+	
+	public Map<Integer, Team> getTeams() {
+		return teams;
+	}
+	
+	public void addTeam(int iProjNum, Team team) {
+		teams.put(new Integer(iProjNum), team);
+	}
+	
+	public void addAssignment(int iAssignmentNum, Assignment assignment) {
+		assignments.put(new Integer(iAssignmentNum), assignment);
+	}
+	
+	public Map<Integer, Assignment> getAssignment() {
+		return assignments;
 	}
 	
     public String toString() {
