@@ -1,11 +1,16 @@
 package edu.gatech.cs6300.testcases;
 
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import edu.gatech.cs6300.Constants;
 import edu.gatech.cs6300.GradesDB;
 import edu.gatech.cs6300.GradesGUI;
+import edu.gatech.cs6300.Project;
 import edu.gatech.cs6300.Session;
 import edu.gatech.cs6300.Student;
+import edu.gatech.cs6300.Team;
 
 import junit.framework.TestCase;
 
@@ -27,6 +32,23 @@ public class GradesGUITest extends TestCase {
         /* create instance of our GUI */
         gradesGUI = new GradesGUI();
         
+		/* Get all projects from GradesDB */
+		ArrayList<Project> projects = db.getProjects();
+		
+		/* For each project, look in respective worksheet...*/		
+		for(Project p : projects) {
+			/* find teams (e.g., worksheet "P4 Teams") and members */
+			HashSet<Team> teams = db.getTeamsForProject(p.getProjectNumber());
+			for (Team t : teams){
+				t.setProject(p);
+			}
+			p.setTeams(teams);	
+		}
+		
+		/* Get all Assignments from GradesDB */
+		db.getAssignments();
+		
+		
         super.setUp();
     }
 
@@ -131,7 +153,7 @@ public class GradesGUITest extends TestCase {
         
         try {
             /* average contribution received by the student from his/her team members */
-            assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), db.getContribution(selectedStudent, projectName));      
+            assertEquals(gradesGUI.getProjectContributionLabel(iProjectNumber), db.getContribution(selectedStudent, iProjectNumber));      
         } catch (Exception e) {
             fail("Exception while checking student's Average Contribution Label");
         }

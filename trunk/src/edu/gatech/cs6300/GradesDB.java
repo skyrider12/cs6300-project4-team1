@@ -320,21 +320,25 @@ public class GradesDB implements OverallGradeCalculator{
     	return contributions;
     }
     
-    public int getContribution(Student student, String project) {
-        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Contri");
-        ListFeed feed = getFeed(session.service, worksheet);
-
-        double val = 0;
-        for (ListEntry entry : feed.getEntries()) {
-        	
-          String studentName = entry.getCustomElements().getValue("students"); 
-          if (studentName != null && studentName.equals(student.getName())) {
-              val = Double.parseDouble(entry.getCustomElements().getValue("average")); 
-              break;
-          }
-          
-        }
-        return (int)Double.parseDouble(formatter.format(val));
+    public int getContribution(Student student, int iproject) {
+    	  
+    	Map<String, Float> contri = getContibutions(iproject);
+    	Float contribution = contri.get(student.getName());
+    	return contribution.intValue();
+//        WorksheetEntry worksheet = getWorksheet(spreadsheet, project + " Contri");
+//        ListFeed feed = getFeed(session.service, worksheet);
+//
+//        double val = 0;
+//        for (ListEntry entry : feed.getEntries()) {
+//        	
+//          String studentName = entry.getCustomElements().getValue("students"); 
+//          if (studentName != null && studentName.equals(student.getName())) {
+//              val = Double.parseDouble(entry.getCustomElements().getValue("average")); 
+//              break;
+//          }
+//          
+//        }
+//        return (int)Double.parseDouble(formatter.format(val));
     }
     
  
