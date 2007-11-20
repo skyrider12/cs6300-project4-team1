@@ -68,5 +68,9 @@ public class Team implements TeamInterface {
 	public void setTeamScore(int teamScore){
 		this.score = teamScore;
 	}
+	
+	public void setProject(Project p) {
+		this.project = p;
+	}
 
 }
