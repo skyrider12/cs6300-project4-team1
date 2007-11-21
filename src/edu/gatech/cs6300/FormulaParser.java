@@ -41,8 +41,8 @@ public class FormulaParser
 			}
 			catch(Exception e)
 			{
-				throw new IllegalArgumentException("Invalid value found in portion of equation: "
-						+ leftSide);
+				//throw new IllegalArgumentException("Invalid value found in portion of equation: "
+				//		+ leftSide);
 			}
 		}
 

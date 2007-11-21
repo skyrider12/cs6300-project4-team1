@@ -49,8 +49,10 @@ public class GradesGUI {
     }
     
 	public GradesGUI(){
-		this.getJFrame();
+		jFrame = this.getJFrame();
 		if(this.studentList == null || this.studentList.size() == 0) {
+			jButton = this.getJButton1();
+			studentScore = getStudentScore();
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 			jButton.setEnabled(false);
 			jTextArea.setEnabled(false);
