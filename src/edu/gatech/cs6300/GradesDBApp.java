@@ -47,7 +47,7 @@ public class GradesDBApp {
 		/* Fill combo-box on GUI with our students HashSet */
 		gradesGUI.populateComboStudents(students);
 
-		gradesDB.Formula = gradesGUI.setFormula();
+		//gradesDB.Formula = gradesGUI.setFormula();
 
 	}
 	

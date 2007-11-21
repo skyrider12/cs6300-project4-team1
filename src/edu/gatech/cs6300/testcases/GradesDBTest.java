@@ -233,11 +233,11 @@ public class GradesDBTest extends TestCase {
 //        assertEquals(db.getTeamGrade(team2, "P1"), 96.0);
 //        assertEquals(db.getTeamGrade(team3, "P1"), 90.0);
 //        
-        assertEquals(db.getAverageProjectGrade("P1"), 93.0);
+        assertEquals(db.getAverageProjectGrade("P1"), 93);
     }
     
     public void testGetAverageProjectGrade() {
-        assertEquals(db.getAverageProjectGrade("P3"), 99.33);        
+        assertEquals(db.getAverageProjectGrade("P3"), 99);        
     }
     
     public void testGetAverageContribution() {
