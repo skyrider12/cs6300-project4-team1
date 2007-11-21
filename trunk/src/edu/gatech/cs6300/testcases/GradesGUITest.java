@@ -109,7 +109,7 @@ public class GradesGUITest extends TestCase {
         /* Test student's project info against labels */
         try {
             /* student’s team's grades */
-        	System.out.println("stu: " + selectedStudent.getName() + "; GUI: " + gradesGUI.getProjectTeamGradeLabel(iProjectNumber) + "; team: " + team.getTeamScore());
+        	//System.out.println("stu: " + selectedStudent.getName() + "; GUI: " + gradesGUI.getProjectTeamGradeLabel(iProjectNumber) + "; team: " + team.getTeamScore());
             assertEquals(gradesGUI.getProjectTeamGradeLabel(iProjectNumber), team.getTeamScore());
         } catch (Exception e) {
             fail("Exception while checking student's Team's Grade Label");
@@ -152,7 +152,7 @@ public class GradesGUITest extends TestCase {
         }
         
         try {
-        	System.out.println("stu: " + selectedStudent.getName() + "; GUI: " + gradesGUI.getStudentAssignmentGradeLabel(2) + "; stugr: " + assignment2.getScoreForStudent(selectedStudent));
+        	//System.out.println("stu: " + selectedStudent.getName() + "; GUI: " + gradesGUI.getStudentAssignmentGradeLabel(2) + "; stugr: " + assignment2.getScoreForStudent(selectedStudent));
             assertEquals(gradesGUI.getStudentAssignmentGradeLabel(2), assignment2.getScoreForStudent(selectedStudent));         
         } catch (Exception e) {
             fail("Exception while checking student's Assignment Grade Label");
