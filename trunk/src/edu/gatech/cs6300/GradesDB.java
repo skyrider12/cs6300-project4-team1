@@ -18,7 +18,6 @@ public class GradesDB implements OverallGradeCalculator{
     DecimalFormat formatter = new DecimalFormat("#0.0#");
     Map<Student, Double> grade;
     String Formula;
-    formulae Form = new formulae();
     
     Map<String, Student> studentMap = new HashMap<String, Student>();
     
@@ -27,13 +26,6 @@ public class GradesDB implements OverallGradeCalculator{
     private static WorksheetEntry wsDetails = null;
     private static WorksheetEntry wsAttendance = null;
     private static WorksheetEntry wsGrades = null;
-    
-    private class formulae {
-    	double AS; /*average grade in the assignments*/
-    	int AT; /*attendance*/
-    	ArrayList<Double> PR; /*Team grade in Proejct n*/
-    	ArrayList<Double> IC; /*Average individual contribution in Project n*/
-    }
     
     public GradesDB(Session session) {
         this.session = session;
@@ -209,7 +201,6 @@ public class GradesDB implements OverallGradeCalculator{
                 break;
             }
         }
-        
         return Double.parseDouble(formatter.format(grade));
     }
     
@@ -523,19 +514,11 @@ public class GradesDB implements OverallGradeCalculator{
     	return rowList;
     }
 
-    public HashSet<Student> getMember() {
-    	String worksheetName;
-    	/*
-    	for (int i=0; i<this.getNumProjects(); i++){
-    		worksheetName = "P"+i+" Teams";
-    		WorksheetEntry worksheet = getWorksheet(spreadsheet, "P1 Teams");
-    	}
-    	*/
-        
-    	/* this.getRow(session.service, worksheet, sRowTitle) */
-    	
-    	return null;
-    }
+//    public HashSet<Student> getMember() {
+//    	String worksheetName;
+//    	
+//    	return null;
+//    }
     
     public int getNum(ListFeed feed) {
         return feed.getEntries().size();
@@ -575,6 +558,10 @@ public class GradesDB implements OverallGradeCalculator{
 		for (String s : sformula){
 		}
 		
+	}
+	
+	public float calculateFormula(){
+		return 0;
 	}
 	
 	public static void main(String args[]) {
